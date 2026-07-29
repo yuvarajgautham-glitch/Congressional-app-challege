@@ -1,4 +1,4 @@
-# HTML5 Website Templates (For Begginers and Professionals)
+# HTML5 Website Templates (For Beginners and Professionals)
  
 > *Click &#9733; if you like the project. Your contributions are heartily ♡ welcome.*
 
