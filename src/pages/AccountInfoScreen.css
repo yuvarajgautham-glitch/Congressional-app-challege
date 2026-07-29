@@ -1,0 +1,258 @@
+/* ============================================================================
+   AccountInfoScreen.css — styling used ONLY by Settings › Account info.
+
+   The two menu rows and the Back button come from App.css (.row-button and
+   friends), shared with the Settings screen. What's left here is the forms and
+   the signed-in details.
+   ============================================================================ */
+
+/* Line content up from the top rather than centring it vertically — forms are
+   tall, and a centred one jumps around as error messages appear. */
+.account-screen {
+  justify-content: flex-start;
+
+  /* Tighter than the 4vh App.css uses. A form has more pieces to stack, so the
+     standard gap would push the buttons off the bottom of a small phone. */
+  gap: 2.5vh;
+}
+
+/* "Current information" is a long heading — trim it so it fits on one line. */
+.account-title {
+  font-size: clamp(24px, 7vw, 32px);
+}
+
+/* ---- The forms ----------------------------------------------------------- */
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* Tight, so each label sits close to its own box. */
+  width: 100%;
+  text-align: left;
+}
+
+.field-label {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+
+  /* Space above each label, so the groups separate. Nothing for the first
+     label, since the gap above the form already handles that. */
+  margin-top: 10px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 14px 12px;
+
+  /* White boxes against the green make it obvious where you can type. */
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 10px;
+
+  font-family: var(--sans);
+
+  /* 16px MATTERS on iPhone. Safari zooms the whole page in when you tap a text
+     box with text smaller than 16px, which throws the layout off and is
+     surprisingly hard to undo. Never set this lower. */
+  font-size: 16px;
+
+  color: #000;
+}
+
+/* The Sex dropdown shares .field-input, but a <select> needs two extras. */
+select.field-input {
+  /* Browsers give dropdowns their own look, which ignores most styling.
+     appearance: none strips that back so ours actually applies. */
+  appearance: none;
+
+  /* Room on the right for the arrow drawn below, so long text can't run
+     underneath it. */
+  padding-right: 40px;
+
+  /* A small black triangle, drawn with a gradient rather than an image file:
+     two diagonal halves meeting at a point. no-repeat keeps it to one. */
+  background-image:
+    linear-gradient(45deg, transparent 50%, #000 50%),
+    linear-gradient(135deg, #000 50%, transparent 50%);
+  background-position:
+    calc(100% - 22px) 22px,
+    calc(100% - 16px) 22px;
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* ---- Number boxes with a unit underneath -------------------------------- */
+
+/* Puts the feet and inches boxes side by side, sharing the width evenly. */
+.field-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* One box plus its little unit word ("feet", "pounds") stacked underneath. */
+.field-part {
+  flex: 1; /* Inside .field-row, this makes both halves equal width. */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.field-unit {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.75; /* Quieter than the labels — it's a hint, not a heading. */
+}
+
+/* :focus-visible styles a box while it's selected, but only when the user is
+   navigating by keyboard — so a mouse or thumb tap doesn't leave an outline
+   behind. It's how people tabbing through the form can see where they are. */
+.field-input:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+/* The message shown when something on the form is wrong. */
+.form-error {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+
+  /* Near-black rather than red: red on this green is genuinely hard to read,
+     and it fits the app's black-on-green look. The message itself carries the
+     meaning, which is better practice anyway — colour alone is no use to
+     someone who can't distinguish it. */
+  background: #1a1a1a;
+  color: #fff;
+
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* The small "demo only" reminder under the registration form. */
+.form-note {
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.35;
+
+  /* Deliberately quieter than the rest — a footnote, not a warning banner. */
+  opacity: 0.75;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ---- Buttons ------------------------------------------------------------- */
+
+/* The main action on a screen: Create account, Log in, Log out. Filled in so
+   it's clearly the thing to tap. */
+.primary-button {
+  flex: 1; /* Share the row evenly with the Cancel button beside it. */
+  padding: 16px 18px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 17px;
+  color: #000;
+
+  background: var(--green-active);
+  border: 3px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The quieter, outline-only button next to it — Cancel. Same size, less
+   visual weight, so the eye lands on the main action first. */
+.ghost-button {
+  flex: 1;
+  padding: 16px 18px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 17px;
+  color: #000;
+
+  background: none;
+  border: 3px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary-button:active,
+.ghost-button:active {
+  transform: scale(0.98);
+}
+
+/* ---- Signed-in details --------------------------------------------------- */
+
+.account-details,
+.account-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* The Name / Email pairs. */
+.detail-list {
+  margin: 0; /* Browsers add space around a <dl> by default. */
+  padding: 16px;
+  text-align: left;
+
+  border: 3px solid #000;
+  border-radius: 12px;
+}
+
+.detail-term {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase; /* Small caps mark these out as labels. */
+  letter-spacing: 0.5px;
+  opacity: 0.75;
+}
+
+.detail-value {
+  /* A <dd> is indented by default; this removes that and adds our own spacing.
+     The last-child rule below then trims the gap after the final value. */
+  margin: 4px 0 16px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 19px;
+
+  /* A long email would otherwise stretch the box and scroll the page
+     sideways. This lets it break onto a second line instead. */
+  overflow-wrap: anywhere;
+}
+
+.detail-value:last-child {
+  margin-bottom: 0;
+}
+
+/* The "Signed in as ..." line on the Account info menu. */
+.account-status {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-button:active,
+  .ghost-button:active {
+    transform: none;
+  }
+}

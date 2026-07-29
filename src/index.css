@@ -1,0 +1,98 @@
+/* ============================================================================
+   index.css — site-wide styling.
+
+   This file sets up things that apply to the WHOLE app: the colours, the fonts,
+   and the phone-shaped frame everything sits inside. Styling for individual
+   screens lives in App.css and in the pages/ folder.
+
+   Reminder on how CSS works: you write a SELECTOR (which elements to style),
+   then a { } block of property: value; pairs.
+   ============================================================================ */
+
+/* :root means "the whole document". Defining values here makes them available
+   everywhere. Names starting with -- are CSS VARIABLES: set the colour once,
+   use it in twenty places, and change all twenty by editing this one line. */
+:root {
+  /* Our green is deliberately a little DARKER than the green in the mock-up
+     JPEG. That matters: the runner on the home screen is cropped out of that
+     JPEG and blended in, and the blend only hides the crop's edges while this
+     colour stays the darker of the two. See .runner in pages/HomeScreen.css. */
+  --green: #1eb92d;
+
+  /* A deeper green used to fill in a button once it's selected. */
+  --green-active: #19a026;
+
+  /* Font lists are read left to right: use the first one installed on the
+     visitor's computer. The last name is a safe fallback that always exists. */
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  /* The chunky slab font used for headings, to match the mock-up. */
+  --display: Rockwell, 'Rockwell Extra Bold', 'Roboto Slab', Georgia, serif;
+
+  /* Shorthand for font-size / line-height, then which font family. So: 16px
+     text with lines spaced at 145% of that. Everything inherits this. */
+  font: 16px/145% var(--sans);
+
+  /* Tells the browser this design is light-coloured, so it doesn't try to
+     auto-darken form controls for people using dark mode. */
+  color-scheme: light;
+
+  /* Small text-quality tweaks — sharper letters, no fake bold/italic. */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* The * selector means EVERY element. border-box makes width include padding
+   and borders, so a 100px-wide box stays 100px once you add a border. Without
+   this, boxes constantly end up wider than you asked for. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  /* Browsers add a margin around the page by default. This removes it so the
+     app can reach the very edge of the screen. */
+  margin: 0;
+
+  /* The dark bars either side of the phone frame on a computer screen. On a
+     real phone the frame fills the width, so this is never visible. */
+  background: #101210;
+}
+
+/* #root targets the one element with id="root" — the div in index.html that
+   React fills in. This is the PHONE FRAME: the app is built for phone screens,
+   so on a computer it stays a narrow centred column instead of stretching. */
+#root {
+  width: 100%;
+
+  /* Never wider than 430px — roughly the width of a large phone. */
+  max-width: 430px;
+
+  /* 100svh = 100% of the "small viewport height": the visible height of a phone
+     screen WITH its address bar showing. Plain vh gets this wrong on phones and
+     pushes the bottom menu off the screen. */
+  height: 100svh;
+
+  /* "0 auto" = no space above/below, automatic space left/right. Equal
+     automatic space on both sides is what centres the frame. */
+  margin: 0 auto;
+
+  /* FLEXBOX: lay the children out in a row or column, and share out space.
+     column = stack children top to bottom. Used all over this app. */
+  display: flex;
+  flex-direction: column;
+
+  /* Anything taller than the frame gets clipped rather than scrolling the whole
+     page — the app should feel fixed in place, like a real phone app. */
+  overflow: hidden;
+
+  background: var(--green); /* var() reads a variable defined above. */
+}
+
+/* Buttons don't inherit the page font automatically — this fixes that so our
+   buttons don't fall back to the browser's default font. */
+button {
+  font-family: inherit;
+}

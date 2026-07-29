@@ -1,0 +1,22 @@
+/* ============================================================================
+   SettingsScreen.css — styling used ONLY by the Settings screen.
+
+   This file is short on purpose. The list rows and the Back button used to live
+   here, but the Account info screen needs exactly the same look, so they moved
+   into App.css where every screen can reach them. They're now called .row-list,
+   .row-button, .row-label, .row-arrow and .back-button.
+
+   The heading and black divider also come from App.css.
+   ============================================================================ */
+
+/* Line the content up from the top, as in the sketch, instead of centring it
+   vertically the way App.css does by default. */
+.settings-screen {
+  justify-content: flex-start;
+}
+
+/* The inner pages have longer headings ("Exercise recommendations"), which at
+   the full title size would swamp the screen. This trims it down a little. */
+.settings-detail-title {
+  font-size: clamp(24px, 7vw, 32px);
+}

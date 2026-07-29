@@ -1,0 +1,81 @@
+/* ============================================================================
+   RoutineScreen.css — styling used ONLY by the Routine screen.
+
+   The heading and the black divider come from App.css, which every screen
+   shares. What's left is the 30-day calendar grid.
+   ============================================================================ */
+
+/* App.css centres a screen's content vertically. The sketch puts the heading at
+   the top with the calendar below, so we line things up from the top instead. */
+.routine-screen {
+  justify-content: flex-start;
+}
+
+/* THE CALENDAR GRID.
+
+   CSS GRID is the right tool here: you describe the shape of the grid once, and
+   the thirty squares flow into it by themselves. You never position a single
+   square yourself, and nothing needs changing if the number of days changes. */
+.calendar {
+  display: grid;
+
+  /* Five equal columns. 1fr means "one share of the space", and since all five
+     ask for the same share, every column comes out the same width.
+     30 days ÷ 5 columns = 6 rows, which the browser works out on its own. */
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 8px; /* The space between squares, both across and down. */
+  width: 100%;
+}
+
+/* One day square. These are real <button> elements so they work with a keyboard
+   and with screen readers without any extra effort on our part. */
+.day {
+  /* Makes the height match the width, so each cell is a perfect square however
+     wide the phone is. 1 / 1 means "1 wide for every 1 tall". */
+  aspect-ratio: 1 / 1;
+
+  /* Centre the day number both across and down inside its square. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Strip the browser's default button look and draw our own outlined box, to
+     match the black-on-green style used everywhere else in the app. */
+  padding: 0;
+  background: none;
+  border: 2px solid #000;
+  border-radius: 8px;
+
+  font-family: var(--display);
+  font-weight: 800;
+
+  /* clamp(smallest, preferred, largest) — the number scales with the screen
+     width but never gets smaller than 13px or bigger than 18px. */
+  font-size: clamp(13px, 4vw, 18px);
+
+  line-height: 1;
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Shrink the square slightly while it's being pressed, as tap feedback. */
+.day:active {
+  transform: scale(0.94);
+}
+
+/* A day that's been ticked off. RoutineScreen.jsx adds the "is-done" class to
+   those squares, and filling them in makes progress obvious at a glance. */
+.day.is-done {
+  background: var(--green-active);
+  border-width: 4px;
+}
+
+/* Respect the phone setting some people use to reduce on-screen movement:
+   when it's switched on, drop the press animation. */
+@media (prefers-reduced-motion: reduce) {
+  .day:active {
+    transform: none;
+  }
+}

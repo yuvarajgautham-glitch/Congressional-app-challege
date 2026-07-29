@@ -1,0 +1,60 @@
+/* ============================================================================
+   GoalsScreen.css — styling used ONLY by the Goals screen.
+
+   The heading and the black divider are styled in App.css, since the home
+   screen uses those too. What's left is the two goal cards.
+   ============================================================================ */
+
+/* App.css centres each screen's content vertically. The sketch for this page
+   has the heading at the TOP with the cards below it, so we override that one
+   setting here. flex-start means "line up from the start", i.e. the top.
+
+   Because this rule comes from a file loaded after App.css and the element has
+   BOTH classNames ("screen goals-screen"), this value wins. */
+.goals-screen {
+  justify-content: flex-start;
+}
+
+/* The container holding the two cards, stacked one above the other. */
+.goal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between the cards. */
+  width: 100%; /* Stretch full width so the cards match the mock-up. */
+}
+
+/* One goal card — "Lose weight" or "Gain weight". These are real <button>
+   elements, which matters: buttons work with the keyboard and with screen
+   readers for free, whereas a clickable <div> does not. */
+.goal-card {
+  /* Two values = top-and-bottom, then left-and-right. The generous 22px top and
+     bottom is what makes these tall, easy targets for a thumb. */
+  padding: 22px 16px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(20px, 6vw, 26px); /* See App.css for how clamp() works. */
+  line-height: 1.15;
+  color: #000;
+
+  /* Strip the browser's default button look, then draw our own outlined box. */
+  background: none;
+  border: 3px solid #000;
+  border-radius: 12px;
+
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* While the card is being pressed, shrink it a touch as tap feedback. */
+.goal-card:active {
+  transform: scale(0.98);
+}
+
+/* The chosen card. GoalsScreen.jsx adds the "is-chosen" class to whichever goal
+   is selected, and this rule fills it in and thickens the border so the choice
+   is obvious at a glance. */
+.goal-card.is-chosen {
+  background: var(--green-active);
+  border-width: 5px;
+}

@@ -1,0 +1,56 @@
+/* ============================================================================
+   HomeScreen.css — styling used ONLY by the home screen.
+
+   Everything else on this page (the title, the black divider, the quote) is
+   styled in App.css, because the other screens reuse those pieces too.
+   ============================================================================ */
+
+/* THE RUNNER.
+
+   There is no runner image file. Instead we show the big mock-up JPEG and zoom
+   in so far that only the runner is visible — like a magnifying glass over one
+   part of a poster. That's what the three background lines below do.
+
+   If you ever get a proper runner image (ideally a PNG with a see-through
+   background), this whole block becomes just:
+       background-image: url('/runner.png');
+       background-size: contain;
+   and the blend-mode line can go too. */
+.runner {
+  /* min(78%, 300px) = whichever is SMALLER. So it's 78% of the screen width on
+     a phone, but stops growing once it reaches 300px on a bigger screen. */
+  width: min(78%, 300px);
+
+  /* Sets the shape: 3500 wide for every 3800 tall. Because the height is worked
+     out from the width, the runner never looks stretched or squashed. These are
+     the real pixel measurements of the runner inside the JPEG. */
+  aspect-ratio: 3500 / 3800;
+
+  /* The picture we're cropping from. The %20 in the name is a space —
+     the real file is public/"Home page with buttons.jpg". */
+  background-image: url('/Home%20page%20with%20buttons.jpg');
+
+  /* HOW THE CROP WORKS. The original picture is 4500 x 10000 pixels, and the
+     runner sits between x 500-4000 and y 2600-6400 inside it.
+
+     background-size over 100% zooms IN. 128.571% is 4500 ÷ 3500 — i.e. blow the
+     picture up until the runner's 3500px width fills this box exactly. The
+     263.158% is the same sum for the height (10000 ÷ 3800).
+
+     background-position then slides the enlarged picture until the runner is
+     the part on show: 50% across, 41.94% down. */
+  background-size: 128.571% 263.158%;
+  background-position: 50% 41.94%;
+
+  /* Don't tile the picture — show it once. */
+  background-repeat: no-repeat;
+
+  /* Hides the edges of the crop. "darken" compares this element with the green
+     behind it and keeps whichever is DARKER, pixel by pixel. The green inside
+     the JPEG is lighter than our --green, so the background is replaced by our
+     green and the join becomes invisible. The runner itself is black — the
+     darkest thing there is — so it always survives untouched.
+
+     This is why --green in index.css must stay darker than the JPEG's green. */
+  mix-blend-mode: darken;
+}

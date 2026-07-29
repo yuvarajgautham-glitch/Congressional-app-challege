@@ -1,0 +1,296 @@
+/* ============================================================================
+   App.css — styling SHARED by every screen.
+
+   Two kinds of rule live here:
+     1. the frame that holds a screen plus the menu bar
+     2. pieces reused on more than one page (heading, divider, quote text)
+
+   Anything used by only ONE screen belongs in that screen's own CSS file, next
+   to its component in the pages/ folder.
+
+   A note on names: a selector starting with "." matches a className in the JSX.
+   So .tab-bar here styles <nav className="tab-bar"> in TabBar.jsx.
+   ============================================================================ */
+
+/* The column holding everything: the current screen on top, menu underneath. */
+.phone {
+  /* flex: 1 means "grow to fill whatever space is available" — here, the full
+     height of #root, which index.css sized to the phone screen. */
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  /* A flexbox quirk worth knowing: without this, a child with a lot of content
+     can refuse to shrink and push the menu bar off the bottom of the screen. */
+  min-height: 0;
+
+  background: var(--green);
+  color: #000; /* #000 is black. Colours can be written as #rrggbb in hex. */
+}
+
+/* ---- Pieces every screen shares ----------------------------------------- */
+
+/* Every page component uses className="screen" on its <main> tag, so this rule
+   gives all of them the same basic layout in one place. */
+.screen {
+  flex: 1; /* Fill the space above the menu bar. */
+
+  /* Stack the heading, divider and content down the page. */
+  display: flex;
+  flex-direction: column;
+
+  /* In a flex COLUMN these two mean:
+       align-items     → left-to-right position (center = middle of the screen)
+       justify-content → top-to-bottom position (center = vertically centred) */
+  align-items: center;
+  justify-content: center;
+
+  /* Space between each child. Much tidier than adding margins to everything.
+     vh = 1% of screen height, so the gap scales with the phone's size. */
+  gap: 4vh;
+
+  /* padding = inner space. Three values = top, left-and-right, bottom. */
+  padding: 5vh 20px 3vh;
+
+  min-height: 0;
+
+  /* If one screen's content is too tall, scroll just that screen — the menu bar
+     stays put at the bottom, which is how phone apps behave. */
+  overflow-y: auto;
+}
+
+/* The big heading at the top of each screen. */
+.title {
+  margin: 0; /* Browsers add space around headings by default; remove it. */
+  font-family: var(--display);
+  font-weight: 900; /* 400 is normal, 700 is bold, 900 is the heaviest. */
+
+  /* clamp(smallest, preferred, largest) — a really useful tool. Here the text
+     wants to be 10% of the screen width, but is never smaller than 30px or
+     bigger than 42px. That's how one size fits every phone. */
+  font-size: clamp(30px, 10vw, 42px);
+
+  line-height: 1.1; /* Tighten the space between the two lines of the title. */
+  letter-spacing: -0.5px; /* Pull letters very slightly together. */
+  text-align: center;
+  color: #000;
+}
+
+/* The thick black lens-shaped line under each heading. It's an empty <div> —
+   there is no text inside it. The shape is made entirely of CSS. */
+.title-rule {
+  /* flex: none stops the flexbox from squashing this to nothing when the screen
+     gets crowded. Without it the divider can vanish on short screens. */
+  flex: none;
+
+  width: 100%;
+  height: 12px;
+  background: #000;
+
+  /* 50% rounds the corners as much as possible. On a wide, short box that
+     produces the pointed lens shape from the mock-up rather than a circle. */
+  border-radius: 50%;
+
+  /* A NEGATIVE margin pulls the element upwards, closing some of the 4vh gap
+     set by .screen so the divider tucks in under the heading. */
+  margin-top: -2vh;
+}
+
+/* The quotation on the home screen, reused for placeholder text. */
+.quote {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(17px, 5vw, 22px);
+  line-height: 1.35;
+  text-align: center;
+  color: #000;
+}
+
+/* ---- Bottom menu: four equal buttons ------------------------------------ */
+
+.tab-bar {
+  /* CSS GRID lays things out in rows and columns. Flexbox shares out space;
+     grid divides it into fixed slots — better when you want equal sizes. */
+  display: grid;
+
+  /* repeat(4, 1fr) = four columns, each 1 "fraction" of the space. Because
+     every column asks for the same 1fr, all four buttons come out EXACTLY the
+     same width, on any phone. This is what keeps the menu even. */
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 8px; /* Space between the buttons. */
+
+  /* env(safe-area-inset-bottom) is the height of the home-bar strip along the
+     bottom of phones without a home button. Adding it keeps the buttons from
+     sitting underneath it. On other devices it's simply 0. */
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+
+  /* The thick black line above the menu, as drawn in the mock-up. */
+  border-top: 10px solid #000;
+
+  background: var(--green);
+}
+
+/* One menu button: icon on top, word underneath. */
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  /* Lets a button shrink narrower than its text if space gets tight. Without
+     it, a long word could stretch one button and unbalance the row. */
+  min-width: 0;
+
+  padding: 10px 4px;
+
+  /* Buttons have their own browser styling, so these lines strip it back:
+     take the page font, black text, no grey background of its own. */
+  font: inherit;
+  color: #000;
+  background: none;
+
+  border: 2px solid #000;
+  border-radius: 10px;
+  cursor: pointer; /* Show the hand pointer on a computer. */
+
+  /* Removes the grey flash phones show when you tap something. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* :active styles an element only WHILE it's being pressed. Shrinking it very
+   slightly makes a tap feel like it did something. */
+.tab:active {
+  transform: scale(0.96);
+}
+
+/* Two class names joined with no space means "has BOTH". So this matches only
+   the button TabBar.jsx gave the extra "is-active" class — the open tab. */
+.tab.is-active {
+  background: var(--green-active);
+  border-width: 4px; /* A thicker outline draws the eye to the current tab. */
+}
+
+/* The icon pictures are white drawings on a BLACK square, which would show as
+   black boxes on the green bar. Two steps fix that without editing the files:
+     invert(1)        → flips the colours, giving a black drawing on white
+     mix-blend-mode   → "multiply" makes white areas take the colour behind
+                        them, so the white square becomes green and only the
+                        black drawing is left. */
+.tab-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain; /* Fit the whole picture in without squashing it. */
+  filter: invert(1);
+  mix-blend-mode: multiply;
+}
+
+.tab-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1;
+}
+
+/* ---- Reusable list rows and the Back button ------------------------------ */
+/* Both the Settings list and the Account info menu are "a stack of rows with a
+   > arrow", so these rules live here rather than in either screen's own file.
+   The rule of thumb: the moment a second screen needs a style, move it here. */
+
+/* The stack of rows. */
+.row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* One row: its label on the left, the > arrow on the right. */
+.row-button {
+  display: flex;
+  align-items: center;
+
+  /* In a flex ROW this pushes the children as far apart as possible, parking
+     the label at the left edge and the arrow at the right. */
+  justify-content: space-between;
+
+  gap: 12px;
+  width: 100%;
+
+  /* Roomy top and bottom padding makes each row an easy target for a thumb. */
+  padding: 18px 16px;
+
+  background: none;
+  border: 3px solid #000;
+  border-radius: 12px;
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.row-button:active {
+  transform: scale(0.98);
+}
+
+.row-label {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(16px, 4.6vw, 21px);
+  line-height: 1.2;
+
+  /* Long labels wrap onto a second line instead of shoving the arrow off the
+     edge of the row. */
+  text-align: left;
+}
+
+.row-arrow {
+  /* Stops the arrow being squashed when a long label needs the space. */
+  flex: none;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* The Back button used on every inner page. */
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 18px;
+  color: #000;
+
+  background: none;
+  border: 3px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back-button:active {
+  transform: scale(0.98);
+}
+
+.back-arrow {
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* A MEDIA QUERY applies its rules only in certain conditions. This one means
+   "if the user has asked their device to reduce motion" — a setting people with
+   motion sensitivity use. We respect it by switching the press effect off. */
+@media (prefers-reduced-motion: reduce) {
+  /* A comma means "and also this selector" — one rule, several targets. */
+  .tab:active,
+  .goal-card:active,
+  .row-button:active,
+  .back-button:active {
+    transform: none;
+  }
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<!--
+  index.html — the page the browser opens first.
+
+  It is almost empty on purpose. Its only jobs are to set up the page and then
+  hand over to React, which builds everything you actually see. You will hardly
+  ever edit this file; the app itself lives in src/.
+
+  Everything you are reading now is an HTML comment: the browser ignores it.
+  Comments in HTML start with an angle bracket, an exclamation mark and two
+  dashes, and end with two dashes and an angle bracket.
+-->
+<html lang="en">
+  <head>
+    <!-- <head> holds information ABOUT the page. Nothing here appears on
+         screen — it's instructions for the browser. -->
+
+    <!-- Which alphabet the file uses. UTF-8 covers every language and emoji. -->
+    <meta charset="UTF-8" />
+
+    <!-- The little icon shown on the browser tab. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Essential for a phone app. Without this line a phone pretends to be a
+         desktop screen and shrinks the whole page down to unreadable size.
+           width=device-width → use the phone's real width
+           initial-scale=1.0  → don't zoom in or out to start with
+           viewport-fit=cover → allow the page behind rounded corners and the
+                                notch, which our safe-area padding accounts for -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <!-- Tints the phone's status bar green to match the app. -->
+    <meta name="theme-color" content="#1eb92d" />
+
+    <!-- The text on the browser tab. -->
+    <title>Active Living</title>
+  </head>
+
+  <body>
+    <!-- <body> is the visible part of the page — and it's nearly empty.
+
+         This one empty div is the box React draws the entire app inside. In
+         src/main.jsx the line getElementById('root') is what finds it. -->
+    <div id="root"></div>
+
+    <!-- Loads the app. type="module" lets that file use import/export.
+         This tag must come last so the div above already exists when it runs. -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
