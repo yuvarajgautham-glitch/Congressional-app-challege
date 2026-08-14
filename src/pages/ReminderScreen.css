@@ -1,0 +1,125 @@
+/* ============================================================================
+   ReminderScreen.css — styling used ONLY by Routine › Daily reminder.
+
+   The heading, divider, text box, buttons and small print all come from
+   App.css. What's left here is this screen's own spacing, and making the time
+   box big enough to be the obvious thing on the page.
+   ============================================================================ */
+
+.reminder-screen {
+  justify-content: flex-start;
+  gap: 2.5vh;
+}
+
+/* Trim the heading to match the other inner pages. */
+.reminder-title {
+  font-size: clamp(24px, 7vw, 32px);
+}
+
+/* The "3 days saved. What time..." line under the heading. */
+.reminder-intro {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---- The questions ------------------------------------------------------- */
+
+/* The heading above each question — "Repeat these days every week?" and "What
+   time should the app remind you?". Both use this so the two read as a pair of
+   questions rather than as unrelated blocks. */
+.reminder-question {
+  margin: 0 0 10px;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(16px, 4.8vw, 19px);
+  line-height: 1.3;
+}
+
+.reminder-weekly {
+  width: 100%;
+}
+
+/* Holds either the two answer buttons, or the answer plus its Undo. Stacked
+   rather than side by side: "Yes, repeat weekly" and "No, just these days" are
+   too long to sit next to each other on a phone without wrapping badly. */
+.reminder-choices {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* The chosen answer, shown once the question has been answered. */
+.reminder-answer {
+  margin: 0;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ---- The time box -------------------------------------------------------- */
+
+.reminder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+}
+
+/* .field-label in App.css leaves space above itself to separate one field from
+   the next in a long form. This screen has a single field, so that space would
+   just be a gap under the heading. */
+.reminder-label {
+  margin-top: 0;
+}
+
+/* The one thing this screen is for, so it's sized like it. */
+.reminder-input {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(28px, 9vw, 40px);
+  text-align: center;
+
+  /* Browsers give a time box their own inner layout and shading. This strips
+     that back so it matches the app's white boxes with black borders. */
+  appearance: none;
+  padding: 18px 12px;
+}
+
+/* Safari and Chrome draw the little clock button inside a time box. It doesn't
+   match anything else here, and tapping the box itself already opens the
+   picker, so it's hidden. */
+.reminder-input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* The line confirming that this happens every day, not just once. */
+.reminder-repeat {
+  margin: 2px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* ---- Buttons ------------------------------------------------------------- */
+
+.reminder-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Both buttons fill the width, stacked. */
+  gap: 10px;
+  width: 100%;
+}

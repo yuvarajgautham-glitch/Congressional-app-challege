@@ -25,7 +25,11 @@
      can refuse to shrink and push the menu bar off the bottom of the screen. */
   min-height: 0;
 
-  background: var(--green);
+  /* No background of its own, on purpose. The gradient is painted once on the
+     phone frame in index.css, and this box sits exactly on top of it — so
+     leaving it see-through lets that one gradient show through every screen. */
+  background: none;
+
   color: #000; /* #000 is black. Colours can be written as #rrggbb in hex. */
 }
 
@@ -130,7 +134,9 @@
   /* The thick black line above the menu, as drawn in the mock-up. */
   border-top: 10px solid #000;
 
-  background: var(--green);
+  /* See-through, like .phone above, so the page gradient carries on down
+     through the menu bar rather than stopping at a flat green strip. */
+  background: none;
 }
 
 /* One menu button: icon on top, word underneath. */
@@ -148,10 +154,10 @@
   padding: 10px 4px;
 
   /* Buttons have their own browser styling, so these lines strip it back:
-     take the page font, black text, no grey background of its own. */
+     take the page font, black text, and our own lemon fill. */
   font: inherit;
   color: #000;
-  background: none;
+  background: var(--button);
 
   border: 2px solid #000;
   border-radius: 10px;
@@ -170,22 +176,19 @@
 /* Two class names joined with no space means "has BOTH". So this matches only
    the button TabBar.jsx gave the extra "is-active" class — the open tab. */
 .tab.is-active {
-  background: var(--green-active);
+  background: var(--button-on);
   border-width: 4px; /* A thicker outline draws the eye to the current tab. */
 }
 
-/* The icon pictures are white drawings on a BLACK square, which would show as
-   black boxes on the green bar. Two steps fix that without editing the files:
-     invert(1)        → flips the colours, giving a black drawing on white
-     mix-blend-mode   → "multiply" makes white areas take the colour behind
-                        them, so the white square becomes green and only the
-                        black drawing is left. */
+/* The icons are black drawings on a see-through background, so there is nothing
+   to do here but size them — no colour flipping, no blending.
+
+   They used to be white-on-black squares that had to be inverted and blended to
+   hide the square. See the note in components/tabs.js for why that had to go. */
 .tab-icon {
   width: 28px;
   height: 28px;
   object-fit: contain; /* Fit the whole picture in without squashing it. */
-  filter: invert(1);
-  mix-blend-mode: multiply;
 }
 
 .tab-label {
@@ -223,7 +226,7 @@
   /* Roomy top and bottom padding makes each row an easy target for a thumb. */
   padding: 18px 16px;
 
-  background: none;
+  background: var(--button);
   border: 3px solid #000;
   border-radius: 12px;
   color: #000;
@@ -266,7 +269,7 @@
   font-size: 18px;
   color: #000;
 
-  background: none;
+  background: var(--button);
   border: 3px solid #000;
   border-radius: 12px;
   cursor: pointer;
@@ -282,6 +285,152 @@
   line-height: 1;
 }
 
+/* ---- Labelled text boxes ------------------------------------------------- */
+/* Used by the account forms and by the reminder time, so they live here. */
+
+.field-label {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+
+  /* Space above each label, so the groups separate. Nothing for the first
+     label, since the gap above the form already handles that. */
+  margin-top: 10px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 14px 12px;
+
+  /* White boxes against the green make it obvious where you can type. */
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 10px;
+
+  font-family: var(--sans);
+
+  /* 16px MATTERS on iPhone. Safari zooms the whole page in when you tap a text
+     box with text smaller than 16px, which throws the layout off and is
+     surprisingly hard to undo. Never set this lower. */
+  font-size: 16px;
+
+  color: #000;
+}
+
+/* :focus-visible styles a box while it's selected, but only when the user is
+   navigating by keyboard — so a mouse or thumb tap doesn't leave an outline
+   behind. It's how people tabbing through a form can see where they are. */
+.field-input:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+/* ---- Action buttons ------------------------------------------------------ */
+
+/* The main action on a screen: Create account, Log in, Log out, Save for today.
+
+   Every button is lemon now, so a fill can't be what marks this one out. The
+   heavier border does that job instead — the same "thicker means more" the open
+   tab and a chosen goal use. */
+.primary-button {
+  padding: 14px 16px; /* 2px less all round, to offset the thicker border. */
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 17px;
+  color: #000;
+
+  background: var(--button);
+  border: 5px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The quieter button beside it — Cancel. Same colour and size, thinner border,
+   so the eye lands on the main action first. */
+.ghost-button {
+  padding: 16px 18px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 17px;
+  color: #000;
+
+  background: var(--button);
+  border: 3px solid #000;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.primary-button:active,
+.ghost-button:active {
+  transform: scale(0.98);
+}
+
+/* A button that can't be used yet — the Save on the reminder screen before a
+   time is picked. Fading it AND changing the cursor gives two signals rather
+   than relying on colour alone, which not everyone can judge. */
+.primary-button:disabled,
+.ghost-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Detail lists and footnotes ----------------------------------------- */
+/* These started life on the Account info screen. Your BMI now shows the same
+   kind of "label above value" box and the same small print, so by the rule of
+   thumb above they moved here. */
+
+/* A boxed set of label-and-value pairs — a <dl> in the HTML. */
+.detail-list {
+  margin: 0; /* Browsers add space around a <dl> by default. */
+  padding: 16px;
+  text-align: left;
+
+  border: 3px solid #000;
+  border-radius: 12px;
+}
+
+.detail-term {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase; /* Small caps mark these out as labels. */
+  letter-spacing: 0.5px;
+  opacity: 0.75;
+}
+
+.detail-value {
+  /* A <dd> is indented by default; this removes that and adds our own spacing.
+     The last-child rule below then trims the gap after the final value. */
+  margin: 4px 0 16px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 19px;
+
+  /* A long email would otherwise stretch the box and scroll the page
+     sideways. This lets it break onto a second line instead. */
+  overflow-wrap: anywhere;
+}
+
+.detail-value:last-child {
+  margin-bottom: 0;
+}
+
+/* Small print: the "demo only" reminder, and the BMI caveat. */
+.form-note {
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.35;
+
+  /* Deliberately quieter than the rest — a footnote, not a warning banner. */
+  opacity: 0.75;
+}
+
 /* A MEDIA QUERY applies its rules only in certain conditions. This one means
    "if the user has asked their device to reduce motion" — a setting people with
    motion sensitivity use. We respect it by switching the press effect off. */
@@ -290,7 +439,10 @@
   .tab:active,
   .goal-card:active,
   .row-button:active,
-  .back-button:active {
+  .back-button:active,
+  .primary-button:active,
+  .ghost-button:active,
+  .plan-item:active {
     transform: none;
   }
 }

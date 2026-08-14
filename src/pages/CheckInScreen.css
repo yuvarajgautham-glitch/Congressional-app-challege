@@ -1,0 +1,221 @@
+/* ============================================================================
+   CheckInScreen.css — styling used ONLY by the check-in the reminder opens.
+
+   The heading, divider and Back button come from App.css. What's left is the
+   streak card, the tick list and the big check mark button.
+   ============================================================================ */
+
+.checkin-screen {
+  justify-content: flex-start;
+  gap: 2vh;
+}
+
+.checkin-title {
+  font-size: clamp(24px, 7vw, 32px);
+}
+
+/* ---- The streak ---------------------------------------------------------- */
+
+/* The number and its label, boxed so it reads as one thing rather than two
+   stray lines. Deliberately the loudest thing on the page once today is
+   confirmed — it's what the user came back to see. */
+.streak-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  padding: 14px 16px;
+
+  background: var(--button-on);
+  border: 5px solid #000;
+  border-radius: 16px;
+}
+
+.streak-count {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(44px, 15vw, 64px);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.streak-label {
+  margin: 2px 0 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* The line explaining what to do, or that today is counted. */
+.checkin-intro {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---- The tick list ------------------------------------------------------- */
+
+.checkin-list {
+  /* Strip the bullets and indent a <ul> comes with, keeping the list structure
+     without the look — each row already has its own tick box. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+/* One row. Shorter than the Goals plan rows: this list is a quick tick-off, so
+   it drops the explanation line and just names the exercise. */
+.checkin-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+
+  background: var(--button);
+  border: 3px solid #000;
+  border-radius: 12px;
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checkin-item:active {
+  transform: scale(0.99);
+}
+
+.checkin-item.is-checked {
+  background: var(--button-on);
+  border-width: 5px;
+
+  /* Trim the padding by the 2px the thicker border adds, so a row doesn't jump
+     wider as it's ticked and nudge everything below it. */
+  padding: 10px 12px;
+}
+
+/* The square box. Square is deliberate: rounded controls read as "pick one of
+   these", a square as "tick any of these" — which is what this list is. */
+.checkin-box {
+  flex: none; /* Never squashed by a long exercise name. */
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 6px;
+}
+
+.checkin-tick {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.checkin-text {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(14px, 4.2vw, 17px);
+  line-height: 1.25;
+
+  /* Without this, a flex child refuses to shrink below its longest word, which
+     on a narrow phone pushes the row off the screen. */
+  min-width: 0;
+}
+
+/* ---- The check mark button ---------------------------------------------- */
+
+.checkin-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+}
+
+.checkin-count {
+  margin: 0;
+  text-align: center;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* The confirm. Bigger than an ordinary button, with the tick set large, because
+   it's the one action the whole page is asking for. */
+.confirm-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 16px 18px;
+
+  background: var(--button);
+  border: 5px solid #000;
+  border-radius: 14px;
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.confirm-tick {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.confirm-label {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 19px;
+}
+
+.confirm-button:active {
+  transform: scale(0.98);
+}
+
+.confirm-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The small lines under the button — why it's greyed out, or what confirming
+   does for the streak. */
+.checkin-hint {
+  margin: 0;
+  text-align: center;
+
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkin-item:active,
+  .confirm-button:active {
+    transform: none;
+  }
+}

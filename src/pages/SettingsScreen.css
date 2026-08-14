@@ -14,9 +14,3 @@
 .settings-screen {
   justify-content: flex-start;
 }
-
-/* The inner pages have longer headings ("Exercise recommendations"), which at
-   the full title size would swamp the screen. This trims it down a little. */
-.settings-detail-title {
-  font-size: clamp(24px, 7vw, 32px);
-}

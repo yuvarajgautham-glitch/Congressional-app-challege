@@ -1,0 +1,180 @@
+/* ============================================================================
+   ExercisePlanScreen.css — styling used ONLY by Goals › the exercise plan.
+
+   The heading, divider, Save button and Back button all come from App.css.
+   What's left here is the tick list.
+   ============================================================================ */
+
+/* Start from the top rather than centring: this is a long list, and a centred
+   one would sit oddly once it fills the screen. The gap is tighter than the 4vh
+   in App.css because there are several blocks to stack. */
+.plan-screen {
+  justify-content: flex-start;
+  gap: 2.5vh;
+}
+
+/* "Lose weight" is a long heading — trim it as the other inner pages do. */
+.plan-title {
+  font-size: clamp(22px, 6.6vw, 30px);
+}
+
+/* The line under the heading explaining what the list is for. */
+.plan-intro {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---- The tick list ------------------------------------------------------- */
+
+.plan-list {
+  /* A <ul> comes with bullet points and an indent by default. list-style: none
+     removes the bullets and the zeroed padding removes the indent, leaving the
+     list structure without the look — which is what we want, since each row
+     already has its own tick box. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* One row: the square box on the left, the recommendation beside it. */
+.plan-item {
+  display: flex;
+
+  /* Line the box up with the FIRST line of text rather than the middle of the
+     block. On a two-line recommendation, centring would leave the box floating
+     opposite the gap between the lines. */
+  align-items: flex-start;
+
+  gap: 14px;
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+
+  background: var(--button);
+  border: 3px solid #000;
+  border-radius: 12px;
+  color: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plan-item:active {
+  transform: scale(0.99);
+}
+
+/* A ticked row is filled in and outlined more heavily, the same way a chosen
+   goal card is on the Goals screen — one visual language for "this is on". */
+.plan-item.is-checked {
+  background: var(--button-on);
+  border-width: 5px;
+
+  /* The thicker border would make the row jump 2px wider and taller as it's
+     ticked, nudging everything below it. Trimming the padding by the same 2px
+     keeps the row exactly where it was. */
+  padding: 12px;
+}
+
+/* The square box itself. Square is deliberate: rounded or circular controls
+   read as "pick one of these", while a square box reads as "tick any of
+   these" — which is exactly what this list is. */
+.plan-box {
+  /* flex: none stops the box being squashed by a long recommendation. */
+  flex: none;
+
+  width: 28px;
+  height: 28px;
+
+  /* Centres the check mark inside the box. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* White against the row's lemon makes an empty box clearly empty, rather than
+     looking like a faint outline drawn on the button. */
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 6px; /* Only just rounded — still unmistakably a square. */
+
+  /* Nudges the box down to sit level with the capital letters of the first
+     line of text, which look slightly lower than the line's true top. */
+  margin-top: 1px;
+}
+
+/* The check mark that appears once a row is ticked. */
+.plan-check {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  color: #000;
+}
+
+/* The recommendation and its detail line, stacked. */
+.plan-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  /* Without this, a flex child refuses to shrink below the width of its longest
+     unbroken word, which on a narrow phone pushes the row off the screen. */
+  min-width: 0;
+}
+
+.plan-item-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(15px, 4.4vw, 18px);
+  line-height: 1.25;
+}
+
+/* The practical detail — quieter, so the recommendation reads first. */
+.plan-item-note {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0.8;
+}
+
+/* ---- Save ---------------------------------------------------------------- */
+
+.plan-save {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Makes the Save button fill the width. */
+  gap: 10px;
+  width: 100%;
+}
+
+/* The "3 of 6 done today" tally above the button. */
+.plan-count {
+  margin: 0;
+  text-align: center;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 16px;
+}
+
+/* The line under the button saying why it can't be used yet. Quieter than the
+   tally above it — it's an explanation, not a heading. */
+.plan-hint {
+  margin: 0;
+  text-align: center;
+
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.8;
+}

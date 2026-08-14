@@ -1,0 +1,153 @@
+/* ============================================================================
+   BmiScreen.css — styling used ONLY by Settings › Your BMI.
+
+   The heading, divider, boxed detail list, small print and Back button all come
+   from App.css. What's left here is the big number and the scale bar, which no
+   other screen has.
+   ============================================================================ */
+
+/* Start at the top and use a smaller gap than the 4vh in App.css — this screen
+   stacks a lot of pieces, and the standard gap would push the last of them off
+   a short phone. */
+.bmi-screen {
+  justify-content: flex-start;
+  gap: 2.5vh;
+}
+
+/* Match the trimmed heading size used by the other inner Settings pages. */
+.bmi-title {
+  font-size: clamp(24px, 7vw, 32px);
+}
+
+/* ---- The number ---------------------------------------------------------- */
+
+.bmi-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+/* Deliberately the biggest thing on the screen. It's the one fact the user
+   opened this page for, so it shouldn't need looking for. */
+.bmi-number {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(52px, 17vw, 76px);
+  line-height: 1;
+  letter-spacing: -2px;
+  color: #000;
+}
+
+/* The band name — "Healthy weight" — reading as a caption to the number. */
+.bmi-band {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(18px, 5.4vw, 24px);
+  text-align: center;
+  color: #000;
+}
+
+/* ---- The scale bar ------------------------------------------------------- */
+
+.bmi-scale {
+  width: 100%;
+}
+
+.bmi-bar {
+  /* position: relative does nothing visible on its own. What it does is make
+     this box the thing the marker below is positioned AGAINST — without it,
+     the marker would measure its "left" from the whole page instead. */
+  position: relative;
+
+  display: flex; /* Lays the four band segments out in a row. */
+  height: 26px;
+
+  border: 3px solid #000;
+  border-radius: 999px; /* Anything huge gives a fully rounded pill shape. */
+
+  /* The segments are square-cornered rectangles, so without this the first and
+     last would poke out past the rounded ends of the bar. */
+  overflow: hidden;
+}
+
+/* One band's slice of the bar. Its WIDTH is set in the JSX, because it's worked
+   out from the numbers in BANDS — a stylesheet can't do that arithmetic. */
+.bmi-segment {
+  height: 100%;
+}
+
+/* The bands are shaded rather than coloured red/amber/green on purpose. Traffic
+   lights would read as a verdict on the person, which a rough screening number
+   has no business delivering — and on this green background red is hard to read
+   anyway. Darker simply means "further from the middle of the scale". */
+.bmi-segment-under {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.bmi-segment-healthy {
+  background: rgba(0, 0, 0, 0.06); /* Lightest, so the healthy band stands out. */
+}
+
+.bmi-segment-over {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.bmi-segment-obese {
+  background: rgba(0, 0, 0, 0.52);
+}
+
+/* The pointer showing where this BMI lands. Its "left" is set in the JSX. */
+.bmi-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0; /* Top and bottom together stretch it to the bar's full height. */
+
+  width: 8px;
+  background: #000;
+  border-radius: 4px;
+
+  /* "left" positions the marker's LEFT EDGE at the right percentage, which
+     would leave it sitting slightly past the mark. Sliding it back by half its
+     own width centres it on the spot instead. */
+  transform: translateX(-4px);
+}
+
+/* The numbers under the bar marking where the bands change. */
+.bmi-ticks {
+  display: flex;
+
+  /* Pushes the first tick to the left edge, the last to the right, and spreads
+     the rest evenly between. They're rough guides, not exact pointers — lining
+     each one up precisely under its boundary would need the same arithmetic as
+     the segments, for very little gain. */
+  justify-content: space-between;
+
+  margin-top: 6px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* ---- The rest ------------------------------------------------------------ */
+
+/* The boxed list of height, weight and age. .detail-list in App.css does the
+   look; this only makes it fill the screen's width. */
+.bmi-inputs {
+  width: 100%;
+}
+
+/* The sentence about what the band means. */
+.bmi-advice {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+  width: 100%;
+}

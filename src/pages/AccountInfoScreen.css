@@ -31,34 +31,9 @@
   text-align: left;
 }
 
-.field-label {
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 15px;
-
-  /* Space above each label, so the groups separate. Nothing for the first
-     label, since the gap above the form already handles that. */
-  margin-top: 10px;
-}
-
-.field-input {
-  width: 100%;
-  padding: 14px 12px;
-
-  /* White boxes against the green make it obvious where you can type. */
-  background: #fff;
-  border: 3px solid #000;
-  border-radius: 10px;
-
-  font-family: var(--sans);
-
-  /* 16px MATTERS on iPhone. Safari zooms the whole page in when you tap a text
-     box with text smaller than 16px, which throws the layout off and is
-     surprisingly hard to undo. Never set this lower. */
-  font-size: 16px;
-
-  color: #000;
-}
+/* .field-label and .field-input themselves live in App.css — the reminder
+   screen uses the same label and box. Everything below is specific to this
+   form: the dropdown, the side-by-side number boxes, and the error message. */
 
 /* The Sex dropdown shares .field-input, but a <select> needs two extras. */
 select.field-input {
@@ -107,14 +82,6 @@ select.field-input {
   opacity: 0.75; /* Quieter than the labels — it's a hint, not a heading. */
 }
 
-/* :focus-visible styles a box while it's selected, but only when the user is
-   navigating by keyboard — so a mouse or thumb tap doesn't leave an outline
-   behind. It's how people tabbing through the form can see where they are. */
-.field-input:focus-visible {
-  outline: 3px solid #000;
-  outline-offset: 2px;
-}
-
 /* The message shown when something on the form is wrong. */
 .form-error {
   margin: 8px 0 0;
@@ -134,64 +101,23 @@ select.field-input {
   line-height: 1.35;
 }
 
-/* The small "demo only" reminder under the registration form. */
-.form-note {
-  margin: 10px 0 0;
-  font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.35;
+/* The "demo only" reminder under the registration form uses .form-note, which
+   now lives in App.css — Your BMI needs the same small print. */
 
-  /* Deliberately quieter than the rest — a footnote, not a warning banner. */
-  opacity: 0.75;
-}
-
+/* The Create account / Cancel pair at the foot of a form. */
 .form-buttons {
   display: flex;
   gap: 10px;
   margin-top: 16px;
 }
 
-/* ---- Buttons ------------------------------------------------------------- */
-
-/* The main action on a screen: Create account, Log in, Log out. Filled in so
-   it's clearly the thing to tap. */
-.primary-button {
-  flex: 1; /* Share the row evenly with the Cancel button beside it. */
-  padding: 16px 18px;
-
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 17px;
-  color: #000;
-
-  background: var(--green-active);
-  border: 3px solid #000;
-  border-radius: 12px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* The quieter, outline-only button next to it — Cancel. Same size, less
-   visual weight, so the eye lands on the main action first. */
-.ghost-button {
+/* .primary-button and .ghost-button themselves live in App.css — the exercise
+   plan screen needs the same Save button. Only the side-by-side sharing is
+   specific to a form, so only that stayed here: inside this row the two
+   buttons split the width evenly. */
+.form-buttons .primary-button,
+.form-buttons .ghost-button {
   flex: 1;
-  padding: 16px 18px;
-
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 17px;
-  color: #000;
-
-  background: none;
-  border: 3px solid #000;
-  border-radius: 12px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.primary-button:active,
-.ghost-button:active {
-  transform: scale(0.98);
 }
 
 /* ---- Signed-in details --------------------------------------------------- */
@@ -204,42 +130,8 @@ select.field-input {
   width: 100%;
 }
 
-/* The Name / Email pairs. */
-.detail-list {
-  margin: 0; /* Browsers add space around a <dl> by default. */
-  padding: 16px;
-  text-align: left;
-
-  border: 3px solid #000;
-  border-radius: 12px;
-}
-
-.detail-term {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase; /* Small caps mark these out as labels. */
-  letter-spacing: 0.5px;
-  opacity: 0.75;
-}
-
-.detail-value {
-  /* A <dd> is indented by default; this removes that and adds our own spacing.
-     The last-child rule below then trims the gap after the final value. */
-  margin: 4px 0 16px;
-
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 19px;
-
-  /* A long email would otherwise stretch the box and scroll the page
-     sideways. This lets it break onto a second line instead. */
-  overflow-wrap: anywhere;
-}
-
-.detail-value:last-child {
-  margin-bottom: 0;
-}
+/* The Name / Email pairs use .detail-list, .detail-term and .detail-value,
+   which now live in App.css — Your BMI shows the same kind of box. */
 
 /* The "Signed in as ..." line on the Account info menu. */
 .account-status {
@@ -250,9 +142,5 @@ select.field-input {
   opacity: 0.8;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .primary-button:active,
-  .ghost-button:active {
-    transform: none;
-  }
-}
+/* The reduced-motion rule that switched the press effect off for these buttons
+   moved to App.css along with the buttons themselves. */

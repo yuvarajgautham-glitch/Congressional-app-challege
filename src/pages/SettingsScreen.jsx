@@ -4,21 +4,29 @@
 // It lists the settings you can open. The ">" arrow on each row is the usual
 // phone-app signal for "tapping this opens another page".
 //
-// Those two inner pages aren't designed yet, so for now each one opens a short
-// placeholder with a Back button. That way nothing in the app dead-ends.
+// Every row opens a real screen of its own, kept in its own file. If you add
+// another setting below, remember to add a matching "if" in the component too —
+// without one, tapping the new row would do nothing at all.
 // ============================================================================
 
 import { useState } from 'react'
 import AccountInfoScreen from './AccountInfoScreen'
+import BmiScreen from './BmiScreen'
+import ResetGoalsScreen from './ResetGoalsScreen'
 import './SettingsScreen.css'
 
-// The rows of the list. Adding a third setting is one more line here.
+// The rows of the list, in the order they appear. Adding another setting is one
+// more line here. "Your BMI" sits under "Account info" because it's worked out
+// entirely from the details given there.
 const SETTINGS = [
   { id: 'account', label: 'Account info' },
-  { id: 'exercise', label: 'Exercise recommendations' },
+  { id: 'bmi', label: 'Your BMI' },
+  { id: 'reset', label: 'Reset goals' },
 ]
 
-function SettingsScreen() {
+// PROPS from App.jsx:
+//   onResetProgress → clears the goal, calendar, reminder and ticked exercises
+function SettingsScreen({ onResetProgress }) {
   // Which inner page is open: null means "show the list".
   //
   // Compare this with the goal and calendar in App.jsx, which had to be stored
@@ -31,44 +39,32 @@ function SettingsScreen() {
   const [openPage, setOpenPage] = useState(null)
 
   // ---- Account info: a screen of its own -----------------------------------
-  // The only inner page that's actually been built. onBack lets it send the
-  // user back to the list here, by setting openPage to null.
+  // onBack lets it send the user back to the list here, by setting openPage
+  // back to null.
   if (openPage === 'account') {
     return <AccountInfoScreen onBack={() => setOpenPage(null)} />
   }
 
-  // ---- Any other inner page ------------------------------------------------
-  // Just "Exercise recommendations" for now, which is still a placeholder.
-  if (openPage) {
-    // .find() looks up the row that was tapped so we can show its name.
-    const page = SETTINGS.find((item) => item.id === openPage)
+  // ---- Your BMI: worked out from the account details ------------------------
+  // Same pattern as above — its own file, handed the same onBack.
+  if (openPage === 'bmi') {
+    return <BmiScreen onBack={() => setOpenPage(null)} />
+  }
 
+  // ---- Reset goals: the yes/no question ------------------------------------
+  // The clearing itself belongs to App.jsx, which owns the goal, the calendar
+  // and the reminder. This screen only passes the request along.
+  if (openPage === 'reset') {
     return (
-      <main className="screen settings-screen">
-        <h1 className="title settings-detail-title">{page.label}</h1>
-        <div className="title-rule" />
-
-        <p className="quote">Coming soon</p>
-
-        {/* Setting openPage back to null returns to the list. */}
-        <button
-          type="button"
-          className="back-button"
-          onClick={() => setOpenPage(null)}
-        >
-          {/* aria-hidden hides the arrow SHAPE from screen readers, since the
-              word "Back" next to it already says what the button does. */}
-          <span className="back-arrow" aria-hidden="true">
-            &#8249;
-          </span>
-          Back
-        </button>
-      </main>
+      <ResetGoalsScreen
+        onReset={onResetProgress}
+        onBack={() => setOpenPage(null)}
+      />
     )
   }
 
   // ---- The list of settings ------------------------------------------------
-  // Reached only when openPage is null, because the "if" above returns early.
+  // Reached only when openPage is null, because the "if"s above return early.
   return (
     <main className="screen settings-screen">
       <h1 className="title">Settings</h1>

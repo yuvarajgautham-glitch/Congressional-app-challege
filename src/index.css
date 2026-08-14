@@ -13,14 +13,45 @@
    everywhere. Names starting with -- are CSS VARIABLES: set the colour once,
    use it in twenty places, and change all twenty by editing this one line. */
 :root {
-  /* Our green is deliberately a little DARKER than the green in the mock-up
-     JPEG. That matters: the runner on the home screen is cropped out of that
-     JPEG and blended in, and the blend only hides the crop's edges while this
-     colour stays the darker of the two. See .runner in pages/HomeScreen.css. */
-  --green: #1eb92d;
+  /* THE BACKGROUND. Every page shares one vertical gradient: a deep green at
+     the top easing into a brighter, more yellow green at the bottom. It's set
+     once on the phone frame in this file, so no screen has to draw its own —
+     which is also what keeps the shading continuous as you move between tabs
+     instead of restarting on each page. */
+  --green-top: #05690d;
+  --green-bottom: #3fae0e;
 
-  /* A deeper green used to fill in a button once it's selected. */
-  --green-active: #19a026;
+  /* 180deg means top to bottom. The two stops are the colours above, so
+     editing those two lines re-themes the whole app. */
+  --green-gradient: linear-gradient(
+    180deg,
+    var(--green-top) 0%,
+    var(--green-bottom) 100%
+  );
+
+  /* A flat green midway between the two, for the few places that can't take a
+     gradient — the list of months a dropdown opens, which the browser draws in
+     its own little window outside the page. */
+  --green: #228c0e;
+
+  /* THE BUTTONS. Every button in the app is filled with this lemon green — the
+     menu buttons, the list rows, the goal cards, the calendar squares, Back,
+     Save, all of them.
+
+     It's deliberately LIGHTER than the brightest part of the background. With a
+     gradient behind them, a mid-green fill would match the background exactly
+     somewhere down the page and the button would vanish; staying clear of both
+     ends of the gradient means a button looks like a button wherever it sits. */
+  --button: #6fcb22;
+
+  /* The fill for a button that's switched ON: the open tab, a chosen goal, a
+     ticked exercise, a picked date.
+
+     Now that every button is lemon, "on" can't be shown by filling it in — so
+     it's a paler, brighter lemon instead, with a thicker black border. Two
+     signals rather than one, which also means the difference doesn't rest on
+     telling two similar greens apart. */
+  --button-on: #b8ef60;
 
   /* Font lists are read left to right: use the first one installed on the
      visitor's computer. The last name is a safe fallback that always exists. */
@@ -88,7 +119,10 @@ body {
      page — the app should feel fixed in place, like a real phone app. */
   overflow: hidden;
 
-  background: var(--green); /* var() reads a variable defined above. */
+  /* The one place the background gradient is drawn. Because #root is the whole
+     phone frame, the shading runs the full height of the screen — behind the
+     current page AND behind the menu bar — exactly as in the reference. */
+  background: var(--green-gradient);
 }
 
 /* Buttons don't inherit the page font automatically — this fixes that so our
