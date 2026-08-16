@@ -6,6 +6,18 @@
 // and App.jsx pick up the change automatically.
 // ============================================================================
 
+// Where the app is being served from: "/" on most hosts, but
+// "/Congressional-app-challege/" on GitHub Pages, which serves a project from a
+// folder named after the repository. Vite fills this in at build time from the
+// "base" setting in vite.config.js.
+//
+// It has to be written this way because these paths are ordinary TEXT. Vite
+// rewrites the addresses it can recognise — in index.html, and in url() inside
+// CSS — but it cannot know that a string in the middle of a file happens to be
+// an address. Left as "/icon-home.png", all five icons would go missing the
+// moment the app was published to a folder rather than a domain root.
+const BASE = import.meta.env.BASE_URL
+
 // "export" makes this list usable by other files (they "import" it).
 // "const" means this name never gets reassigned to something else.
 //
@@ -14,11 +26,15 @@
 export const TABS = [
   // id    → the short internal name the code uses to know which tab is open.
   // label → the human-readable word printed under the icon.
-  // icon  → the picture file. A leading "/" means "look in the public/ folder".
-  { id: 'home', label: 'Home', icon: '/icon-home.png' },
-  { id: 'goals', label: 'Goals', icon: '/icon-goals.png' },
-  { id: 'routine', label: 'Routine', icon: '/icon-routine.png' },
-  { id: 'settings', label: 'Settings', icon: '/icon-settings.png' },
+  // icon  → the picture file, in the public/ folder. BASE already ends in a
+  //         slash, so the file name follows it directly.
+  { id: 'home', label: 'Home', icon: `${BASE}icon-home.png` },
+  { id: 'goals', label: 'Goals', icon: `${BASE}icon-goals.png` },
+  { id: 'routine', label: 'Routine', icon: `${BASE}icon-routine.png` },
+  // Sits between Routine and Settings: it's part of using the app, not part of
+  // configuring it. Its icon is a miniature of the graph the page draws.
+  { id: 'data', label: 'Your data', icon: `${BASE}icon-data.png` },
+  { id: 'settings', label: 'Settings', icon: `${BASE}icon-settings.png` },
 ]
 
 // Note: these are black drawings on a SEE-THROUGH background, so they sit

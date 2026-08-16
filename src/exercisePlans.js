@@ -25,6 +25,10 @@
 // Note that no list tells anyone a calorie number. The research is clear that
 // extreme restriction backfires, and this app knows nothing about the person
 // beyond their height and weight, so the items describe habits instead.
+//
+// Any weight written in these lists is in POUNDS, because that's what the
+// account form asks for and what Account info and Your BMI both show. The
+// research quotes both units; the app sticks to one so nobody has to convert.
 // ---------------------------------------------------------------------------
 //
 // PLANS[goal] gives the right list with no "if" anywhere — which is why adding
@@ -40,7 +44,7 @@ export const PLANS = {
   lose: {
     title: 'Lose weight',
     intro:
-      'Aim for half a kilo to a kilo a week — steady habits you can keep beat any quick fix. Tick off what you manage today.',
+      'Aim for 1 to 2 pounds a week — steady habits you can keep beat any quick fix. Tick off what you manage today.',
     items: [
       {
         id: 'cardio',

@@ -1,0 +1,86 @@
+# ============================================================================
+# deploy.yml — publishes the app to GitHub Pages on every push to master.
+#
+# A GitHub Action is a job GitHub runs for you on its own computer. This one
+# does exactly what you would do by hand — install, build, publish — so that
+# pushing your code is all it takes to update the live site.
+#
+# It builds rather than committing the finished files, which is why dist/ can
+# stay in .gitignore: the repository keeps the SOURCE, and the built version is
+# made fresh each time from it.
+#
+# BEFORE THIS WORKS, once: on GitHub go to Settings → Pages, and under "Build
+# and deployment" set Source to "GitHub Actions". Without that the job runs and
+# then has nowhere to publish to.
+# ============================================================================
+
+name: Deploy to GitHub Pages
+
+on:
+  # Run whenever code is pushed to master.
+  push:
+    branches: [master]
+
+  # ...and allow running it by hand from the Actions tab, which is useful when
+  # you want to republish without changing anything.
+  workflow_dispatch:
+
+# The permissions this job needs. GitHub gives out as little as possible by
+# default, so publishing has to be asked for explicitly.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Stops two pushes in quick succession from publishing over each other. The
+# second waits rather than racing the first.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Copy the repository onto the machine running this job.
+      - uses: actions/checkout@v4
+
+      # 2. Install Node. The cache line makes later runs much faster by keeping
+      #    the downloaded packages between them.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Install exactly the versions in package-lock.json. "npm ci" is the
+      #    right command for automation — unlike "npm install" it never quietly
+      #    upgrades anything, so the build is the same every time.
+      - run: npm ci
+
+      # 4. Build. GITHUB_PAGES is what tells vite.config.js to use the
+      #    /Congressional-app-challege/ folder in every address — see the note
+      #    on "base" in that file for why this matters.
+      - run: npm run build
+        env:
+          GITHUB_PAGES: 'true'
+
+      # 5. Hand the finished dist/ folder to GitHub Pages.
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    # Waits for the build job above to finish before it starts.
+    needs: build
+    runs-on: ubuntu-latest
+
+    # Tells GitHub this job publishes the site, which is what makes the live
+    # address show up on the repository page afterwards.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

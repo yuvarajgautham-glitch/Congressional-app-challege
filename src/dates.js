@@ -55,6 +55,19 @@ export function formatNow(now) {
   return `${date} · ${time}`
 }
 
+// A date key written short, for a chart axis: "16 Aug".
+//
+// Built from the key rather than a Date the caller happens to have, so every
+// label on the graph comes from the same place as the data itself.
+export function formatShortDate(dateKey) {
+  const [year, month, day] = dateKey.split('-').map(Number)
+
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'short',
+  })
+}
+
 // The heading for one month: "August 2026".
 export function formatMonth(date) {
   return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })

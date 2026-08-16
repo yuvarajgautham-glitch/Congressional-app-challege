@@ -15,14 +15,16 @@
 
 import { useState } from 'react'
 import { todayKey, loadDayPlan, saveDayPlan } from '../exerciseStorage'
-import { loadStreak, isCheckedIn, recordCheckIn } from '../streakStorage'
+import { currentStreak, isCheckedIn, recordCheckIn } from '../streakStorage'
 import { PLANS } from '../exercisePlans'
 import './CheckInScreen.css'
 
 // PROPS from App.jsx:
-//   goal    → the chosen goal ('lose', 'maintain', 'gain'), or null for none
-//   onClose → shuts the check-in and returns to whatever tab was open
-function CheckInScreen({ goal, onClose }) {
+//   goal           → the chosen goal ('lose', 'maintain', 'gain'), or null
+//   scheduledDays  → the workout days picked on the Routine calendar, which is
+//                    what "in a row" is counted against
+//   onClose        → shuts the check-in and returns to whatever tab was open
+function CheckInScreen({ goal, scheduledDays, onClose }) {
   // Today's date, worked out once and kept. A check-in started just before
   // midnight still counts for the day it was started.
   const [dateKey] = useState(() => todayKey())
@@ -46,7 +48,13 @@ function CheckInScreen({ goal, onClose }) {
   // The streak as it stands, and whether today has already been confirmed.
   // Both are kept in state rather than read fresh each time, because tapping
   // the check mark has to change what's on screen straight away.
-  const [streak, setStreak] = useState(() => loadStreak())
+  //
+  // currentStreak, not the raw saved number: if a workout day has been and gone
+  // without being confirmed, the run is already broken and this reports 0. The
+  // saved count wouldn't know that until the next check-in.
+  const [streak, setStreak] = useState(() =>
+    currentStreak(scheduledDays, dateKey),
+  )
   const [isDone, setIsDone] = useState(() => isCheckedIn(dateKey))
 
   // Ticks one exercise, or clears it. Saved on every tap rather than waiting
@@ -64,7 +72,10 @@ function CheckInScreen({ goal, onClose }) {
   // The check mark. Records the day and moves the streak on.
   function handleConfirm() {
     saveDayPlan(dateKey, goal, chosen)
-    setStreak(recordCheckIn(dateKey))
+
+    // recordCheckIn hands back the new streak, so there's no need to read it
+    // again — and .count because it returns the whole record.
+    setStreak(recordCheckIn(dateKey, scheduledDays).count)
     setIsDone(true)
   }
 
@@ -103,9 +114,9 @@ function CheckInScreen({ goal, onClose }) {
           lower down, out of the way of the question being asked. */}
       {isDone && (
         <div className="streak-card">
-          <p className="streak-count">{streak.count}</p>
+          <p className="streak-count">{streak}</p>
           <p className="streak-label">
-            {`${streak.count === 1 ? 'day' : 'days'} in a row`}
+            {`${streak === 1 ? 'workout' : 'workouts'} in a row`}
           </p>
         </div>
       )}
@@ -176,9 +187,9 @@ function CheckInScreen({ goal, onClose }) {
 
         {/* Before confirming, the streak still gets a quiet mention — it's the
             reason to tap the button, so hiding it entirely would be odd. */}
-        {!isDone && streak.count > 0 && (
+        {!isDone && streak > 0 && (
           <p className="checkin-hint">
-            {`Confirming keeps your ${streak.count} day streak going.`}
+            {`Confirming keeps your streak of ${streak} going.`}
           </p>
         )}
       </div>

@@ -10,6 +10,7 @@
 // ============================================================================
 
 import { useState } from 'react'
+import { hashPassword } from '../passwordSecurity'
 
 // The choices in the Sex dropdown. Kept as a list so the <option> tags can be
 // built with .map(), the same trick used for the menu buttons and the calendar.
@@ -44,7 +45,10 @@ function RegisterForm({ onCreate, onCancel }) {
   // Runs when the form is submitted — either by tapping the button, or by
   // pressing Go/Enter on the keyboard. Using a real <form> gives you that
   // second option for free, which is why it's better than a lone button.
-  function handleSubmit(event) {
+  //
+  // "async" because scrambling the password takes a moment and hands back a
+  // promise. The checks below are unchanged; only the very end waits.
+  async function handleSubmit(event) {
     // Browsers reload the whole page when a form is submitted — behaviour from
     // long before apps like this existed. This line stops that.
     event.preventDefault()
@@ -124,8 +128,14 @@ function RegisterForm({ onCreate, onCancel }) {
     }
 
     // ---- Everything passed. Build the account and hand it up.
-    // Note that "confirm" is deliberately not included below — it exists only
-    // to catch a typo, and there's no reason to store the password twice.
+
+    // The password is scrambled BEFORE it goes anywhere, so what gets saved is
+    // a hash that can't be read back — see passwordSecurity.js. The typed
+    // password exists only in this function and is gone when it ends.
+    //
+    // "confirm" is deliberately left out: it exists only to catch a typo.
+    const auth = await hashPassword(password)
+
     onCreate({
       name: cleanName,
       age: ageNumber,
@@ -136,7 +146,9 @@ function RegisterForm({ onCreate, onCancel }) {
       // Stored in lower case so signing in later isn't case-sensitive —
       // people don't remember whether they typed Sam@ or sam@.
       email: cleanEmail.toLowerCase(),
-      password,
+      // Note the name: "auth", not "password". Nothing in the saved account is
+      // the password any more, and the name should say so.
+      auth,
     })
   }
 

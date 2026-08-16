@@ -13,6 +13,7 @@ import { useState } from 'react'
 import AccountInfoScreen from './AccountInfoScreen'
 import BmiScreen from './BmiScreen'
 import ResetGoalsScreen from './ResetGoalsScreen'
+import PrivacyScreen from './PrivacyScreen'
 import './SettingsScreen.css'
 
 // The rows of the list, in the order they appear. Adding another setting is one
@@ -22,6 +23,7 @@ const SETTINGS = [
   { id: 'account', label: 'Account info' },
   { id: 'bmi', label: 'Your BMI' },
   { id: 'reset', label: 'Reset goals' },
+  { id: 'privacy', label: 'Privacy and data' },
 ]
 
 // PROPS from App.jsx:
@@ -61,6 +63,11 @@ function SettingsScreen({ onResetProgress }) {
         onBack={() => setOpenPage(null)}
       />
     )
+  }
+
+  // ---- Privacy and data: what's stored, and what isn't ----------------------
+  if (openPage === 'privacy') {
+    return <PrivacyScreen onBack={() => setOpenPage(null)} />
   }
 
   // ---- The list of settings ------------------------------------------------

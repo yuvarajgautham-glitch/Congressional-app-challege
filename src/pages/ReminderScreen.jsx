@@ -193,8 +193,10 @@ function ReminderScreen({
         />
 
         <p className="reminder-repeat">
-          Repeats every day at this time. An hour later you&apos;ll get a second
-          nudge to tick off what you did, unless you already have.
+          You&apos;ll be reminded at this time on the days you picked, and
+          nothing on your rest days. An hour later a second reminder asks
+          whether you finished — confirming there is what adds a day to your
+          streak.
         </p>
       </div>
 

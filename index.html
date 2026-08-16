@@ -38,6 +38,41 @@
          against. Keep it in step with --green-top in src/index.css. -->
     <meta name="theme-color" content="#05690d" />
 
+    <!-- ---- INSTALLING THIS AS A PHONE APP ----------------------------------
+         Everything below is what turns this from a web page into something a
+         phone will install: tap Share → Add to Home Screen on an iPhone, or
+         "Install app" on Android, and it gets its own icon and opens
+         full-screen with no browser bar around it.
+
+         It only works over https. Netlify, Vercel and GitHub Pages all give you
+         that; opening the built files straight off your disk does not. -->
+
+    <!-- The app's name, colours and icons. Android reads this for everything;
+         iOS reads it for the name and the splash screen. -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- iOS uses THIS tag for the home screen icon, not the manifest. Leave it
+         out and you get a blurry screenshot of the page instead of an icon. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Opens full-screen, without Safari's address bar and toolbar. This is
+         the single tag that makes it feel like an app rather than a website.
+         The second line is the same thing for Android browsers. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Lets the page run BEHIND the status bar, so the green gradient reaches
+         the very top of the screen instead of stopping under a grey strip.
+         The clock and battery are drawn in white over it, which reads fine on
+         the dark green up there.
+
+         This is why .screen in App.css adds env(safe-area-inset-top) to its top
+         padding — without that, the heading would sit under the clock. -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- The name shown under the icon on the home screen. -->
+    <meta name="apple-mobile-web-app-title" content="Active Living" />
+
     <!-- The text on the browser tab. -->
     <title>Active Living</title>
   </head>

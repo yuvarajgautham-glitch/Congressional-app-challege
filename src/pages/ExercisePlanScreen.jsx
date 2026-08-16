@@ -129,7 +129,7 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
         <p className="plan-count">
           {/* .length counts the list. Showing the tally means the user doesn't
               have to look back up the page to see how the day is going. */}
-          {`${chosen.length} of ${plan.items.length} done today`}
+          {`${chosen.length} of ${plan.items.length} chosen`}
         </p>
 
         <button

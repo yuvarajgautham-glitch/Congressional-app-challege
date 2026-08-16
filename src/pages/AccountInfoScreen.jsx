@@ -59,6 +59,16 @@ function AccountInfoScreen({ onBack }) {
     setView('current')
   }
 
+  // Called by LoginForm when it finds an account saved by an older version of
+  // the app, with the password stored as typed. It hands back the same account
+  // with a scrambled password instead, and this saves it — so the plain-text
+  // one is overwritten the first time such a user logs in, without them having
+  // to do anything or even notice.
+  function handleUpgrade(repairedAccount) {
+    setAccount(repairedAccount)
+    saveAccount(repairedAccount)
+  }
+
   // Called by LoginForm once the email and password match.
   function handleLogin() {
     setLoggedIn(true)
@@ -117,6 +127,7 @@ function AccountInfoScreen({ onBack }) {
           <LoginForm
             account={account}
             onLogin={handleLogin}
+            onUpgrade={handleUpgrade}
             onCancel={() => setView('menu')}
           />
         ) : (

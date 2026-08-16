@@ -20,6 +20,20 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
 
+  // WHERE THE APP WILL LIVE on the web address.
+  //
+  // Most hosts serve a site from the root of a domain, so "/" is right and
+  // nothing needs saying. GitHub Pages is the exception for a project repo: it
+  // serves from a folder named after the repository, so every file has to be
+  // asked for at /Congressional-app-challege/... instead. Get this wrong and
+  // the page loads but every script, style and icon comes back 404 — the
+  // classic "blank white page on GitHub Pages".
+  //
+  // The environment variable keeps the two apart: the GitHub Actions workflow
+  // in .github/workflows sets it, while `npm run dev` and any other host stay
+  // at the root. Note the trailing slash — Vite requires it.
+  base: process.env.GITHUB_PAGES ? '/Congressional-app-challege/' : '/',
+
   // Settings for the dev server that `npm run dev` starts.
   server: {
     // By default the server only answers your own computer, so a phone on the

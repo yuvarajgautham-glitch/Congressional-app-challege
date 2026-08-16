@@ -54,8 +54,15 @@
      vh = 1% of screen height, so the gap scales with the phone's size. */
   gap: 4vh;
 
-  /* padding = inner space. Three values = top, left-and-right, bottom. */
-  padding: 5vh 20px 3vh;
+  /* padding = inner space. Three values = top, left-and-right, bottom.
+
+     env(safe-area-inset-top) is the height of the strip the clock and battery
+     sit in — the notch or Dynamic Island area. It only matters once the app is
+     installed to the home screen, where index.html lets the page run behind the
+     status bar so the gradient reaches the very top. Without this the heading
+     would sit underneath the clock. In a normal browser tab, and on anything
+     without a notch, it's simply 0 and nothing changes. */
+  padding: calc(5vh + env(safe-area-inset-top)) 20px 3vh;
 
   min-height: 0;
 
@@ -112,19 +119,22 @@
   color: #000;
 }
 
-/* ---- Bottom menu: four equal buttons ------------------------------------ */
+/* ---- Bottom menu: five equal buttons ------------------------------------ */
 
 .tab-bar {
   /* CSS GRID lays things out in rows and columns. Flexbox shares out space;
      grid divides it into fixed slots — better when you want equal sizes. */
   display: grid;
 
-  /* repeat(4, 1fr) = four columns, each 1 "fraction" of the space. Because
-     every column asks for the same 1fr, all four buttons come out EXACTLY the
-     same width, on any phone. This is what keeps the menu even. */
-  grid-template-columns: repeat(4, 1fr);
+  /* repeat(5, 1fr) = five columns, each 1 "fraction" of the space. Because
+     every column asks for the same 1fr, all five buttons come out EXACTLY the
+     same width, on any phone. This is what keeps the menu even.
 
-  gap: 8px; /* Space between the buttons. */
+     Change this number if you add a tab to components/tabs.js — otherwise the
+     new button wraps onto a second row. */
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 6px; /* Space between the buttons. Tighter now there are five. */
 
   /* env(safe-area-inset-bottom) is the height of the home-bar strip along the
      bottom of phones without a home button. Adding it keeps the buttons from
@@ -192,9 +202,14 @@
 }
 
 .tab-label {
-  font-size: 11px;
+  /* Five buttons leave roughly 70px of usable width each, and "Your data" is
+     the longest label. nowrap keeps it on one line — allowed to wrap, that one
+     button would grow taller and drag the whole menu bar up with it. */
+  white-space: nowrap;
+
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0;
   line-height: 1;
 }
 

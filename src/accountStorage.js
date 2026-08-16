@@ -7,18 +7,24 @@
 // phone, even after the app is closed.
 //
 // ---------------------------------------------------------------------------
-// IMPORTANT — READ THIS BEFORE SHOWING ANYONE THE APP
+// WHAT IS AND ISN'T PROTECTED HERE
 //
-// This is a DEMO login, not a real one. The account is stored on the phone
-// itself, in plain readable text, and nothing is checked by a server. Anyone
-// who can open the browser's developer tools can read the password.
+// The PASSWORD is safe. It is never stored as typed — only a one-way scramble
+// of it, with a random salt and 100,000 rounds, so it cannot be read back out
+// of storage by anyone. See passwordSecurity.js for how and why.
 //
-// That is fine for a prototype you demonstrate, and it is how a lot of school
-// projects work. It is NOT fine for real users with real passwords. A real
-// login needs a SERVER that stores passwords scrambled (called "hashing") and
-// checks them, so the phone never holds the password at all.
+// The rest of the account — name, age, sex, height, weight, email — is stored
+// as ordinary readable text, because the app has to display it. Anyone with the
+// unlocked phone and the developer tools open could read those.
 //
-// So: never type a password here that you actually use somewhere else.
+// And this is still a phone-only login, not a real one. There is no server to
+// check anything, so someone editing storage by hand could mark themselves as
+// signed in. That is a limit of having no server at all, and no amount of work
+// in this file changes it.
+//
+// The trade-off is deliberate: no server also means the data never leaves the
+// phone, is never sent anywhere, and cannot be leaked by someone else's break-in.
+// Settings › Privacy and data explains this to the user in plain words.
 // ---------------------------------------------------------------------------
 // ============================================================================
 

@@ -1,0 +1,245 @@
+/* ============================================================================
+   DataScreen.css — styling used ONLY by the "Your data" tab.
+
+   The heading, divider, form fields and buttons come from App.css. What's left
+   is the graph.
+
+   A note on the colours below: the chart sits on a WHITE card rather than on
+   the green gradient. A thin 2px line needs a calm, even background to read
+   against, and the gradient is neither — the same line would be strong at the
+   top of the screen and muddy at the bottom. White also matches the app's text
+   boxes, so it still looks like it belongs.
+   ============================================================================ */
+
+.data-screen {
+  justify-content: flex-start;
+  gap: 2vh;
+}
+
+.data-title {
+  font-size: clamp(24px, 7vw, 32px);
+}
+
+/* The line above the weekly form. */
+.data-intro {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---- Weight / BMI switch ------------------------------------------------- */
+
+.series-switch {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.series-button {
+  flex: 1;
+  padding: 10px 12px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+  color: #000;
+
+  background: var(--button);
+  border: 3px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The measure currently on the graph — the same paler lemon and thicker border
+   the app uses everywhere else for "this one is on". */
+.series-button.is-chosen {
+  background: var(--button-on);
+  border-width: 5px;
+  padding: 8px 10px; /* Trimmed by the 2px the border adds, so it can't grow. */
+}
+
+/* ---- The chart ----------------------------------------------------------- */
+
+.chart-card {
+  width: 100%;
+  padding: 12px;
+
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 14px;
+}
+
+/* Names what's plotted. With a single line there's no key to draw — the title
+   does that job, and a key for one thing is just clutter. */
+.chart-title {
+  margin: 0 0 6px;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  color: #000;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto; /* The viewBox sets the shape; the width sets the size. */
+}
+
+/* Faint, so the eye goes to the data and not the ruler behind it. */
+.chart-grid {
+  stroke: rgba(0, 0, 0, 0.14);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The line. vector-effect: non-scaling-stroke keeps it exactly 2px however
+   wide the phone stretches the picture — without it the stroke scales with the
+   box and comes out heavy on a large screen and hairline on a small one. */
+.chart-line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* One reading. The white ring separates a dot from the line passing under it,
+   so a point never dissolves into its own line. */
+.chart-dot {
+  fill: #000;
+  stroke: #fff;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The invisible tap target around each dot. A 4px dot is far too small for a
+   thumb; this makes the real target about 32px across without changing how the
+   graph looks. */
+.chart-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+/* Axis numbers and dates. Text stays in ink, never in the colour of the data —
+   the line carries the identity, the words stay readable. */
+.chart-axis-label {
+  fill: rgba(0, 0, 0, 0.65);
+  font-family: system-ui, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* The y-axis numbers sit to the LEFT of their grid line, so they're anchored
+   at their right edge. */
+.chart-axis-label {
+  text-anchor: end;
+}
+
+/* The two date labels are anchored to the ends of the axis instead. */
+.chart-start {
+  text-anchor: start;
+}
+
+.chart-end {
+  text-anchor: end;
+}
+
+/* What the tapped point says. min-height holds the space whether or not
+   anything is selected, so the card doesn't jump as you tap around. */
+.chart-readout {
+  margin: 6px 0 0;
+  min-height: 18px;
+  text-align: center;
+
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* ---- The summary --------------------------------------------------------- */
+
+.data-summary {
+  width: 100%;
+  text-align: left;
+}
+
+.data-change {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(16px, 4.8vw, 19px);
+  line-height: 1.3;
+}
+
+.data-verdict {
+  margin: 4px 0 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  opacity: 0.85;
+}
+
+/* ---- The readings in words ---------------------------------------------- */
+
+/* <details> is a built-in fold-away box: the browser handles opening and
+   closing it, and screen readers already know what it is. */
+.data-table {
+  width: 100%;
+  text-align: left;
+}
+
+.data-table-summary {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.data-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 0;
+
+  /* A hairline between rows, in black at low opacity rather than grey, so it
+     sits on the green without looking like a different colour. */
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+.data-row-date {
+  flex: none;
+  font-weight: 700;
+}
+
+.data-row-value {
+  text-align: right;
+  opacity: 0.85;
+}
+
+/* ---- Add button ---------------------------------------------------------- */
+
+.data-add {
+  width: 100%;
+}

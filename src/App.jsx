@@ -27,12 +27,14 @@ import {
 } from './routineStorage'
 import { clearExercisePlans, todayKey } from './exerciseStorage'
 import { clearStreak, isCheckedIn } from './streakStorage'
+import { isMeasurementDue, clearMeasurements } from './measurementsStorage'
 import {
   startDailyReminder,
   showNotification,
   addHours,
 } from './notifications'
 import CheckInScreen from './pages/CheckInScreen'
+import DataScreen from './pages/DataScreen'
 
 // Our own building blocks. Each is a component that draws part of the app.
 import TabBar from './components/TabBar'
@@ -82,6 +84,11 @@ function App() {
   // notification, and it covers whichever tab is showing — a notification
   // shouldn't quietly change which tab the user was on.
   const [showCheckIn, setShowCheckIn] = useState(false)
+
+  // Set when the weekly notification asks for measurements, so the Your data
+  // tab opens straight onto the form instead of the graph. DataScreen clears it
+  // once it has acted on it.
+  const [askForMeasurements, setAskForMeasurements] = useState(false)
 
   // ---- ACTIONS -------------------------------------------------------------
   // Picks a calendar date, or un-picks it if it was already chosen. The date
@@ -138,6 +145,7 @@ function App() {
     clearRoutine()
     clearExercisePlans()
     clearStreak()
+    clearMeasurements()
 
     // The check-in is closed too, in case it happens to be open — it would
     // otherwise sit there showing a streak that no longer exists.
@@ -160,26 +168,64 @@ function App() {
     // No reminder set. Returning early leaves no timers running.
     if (!reminderTime) return
 
+    // Is today one of the days the user picked on the Routine calendar?
+    //
+    // The days are read from STORAGE each time a timer fires, not taken from
+    // routineDays above. That's deliberate: this effect only re-runs when the
+    // time changes, so a list captured here would be the one from whenever the
+    // time was last set — and picking new days would have no effect until the
+    // app was reopened. Reading at the moment it fires is always current.
+    //
+    // With no days saved at all there is no routine to remind anyone about, so
+    // nothing is sent.
+    function isWorkoutToday() {
+      return loadRoutineDays().includes(todayKey())
+    }
+
     // 1. The reminder itself, at the time the user chose.
-    const stopReminder = startDailyReminder(reminderTime, () =>
+    const stopReminder = startDailyReminder(reminderTime, () => {
+      if (!isWorkoutToday()) return
+      // ONCE A WEEK this one asks for measurements instead of nudging about
+      // exercise. isMeasurementDue() is true only when nothing has been
+      // recorded in seven days, so it's the FIRST reminder of each week that
+      // asks — and saving a reading turns it off for the rest of the week.
+      //
+      // Asking instead of as well matters: two notifications at the same
+      // moment is how people learn to swipe them away without reading.
+      if (isMeasurementDue()) {
+        showNotification(
+          'Weekly check-in: your measurements',
+          'Tap to update your weight, height and age. It stays on your phone.',
+          () => {
+            setShowCheckIn(false)
+            setAskForMeasurements(true)
+            setActiveTab('data')
+          },
+        )
+        return
+      }
+
       showNotification(
-        'Time to get moving',
-        'Your exercise routine is waiting in Active Living.',
+        'Time to work out',
+        'Today is one of your routine days. Your exercises are ready.',
         // Tapping it opens the check-in. Someone who exercises first and taps
         // afterwards lands exactly where they need to be.
         () => setShowCheckIn(true),
-      ),
-    )
+      )
+    })
 
     // 2. The follow-up, an hour later, asking whether they actually did it.
+    // This is the one that moves the streak: confirming on it adds a day.
     const stopFollowUp = startDailyReminder(addHours(reminderTime, 1), () => {
+      if (!isWorkoutToday()) return
+
       // Skipped if they've already confirmed today. "Did you do it?" an hour
       // after they said yes reads like the app wasn't listening.
       if (isCheckedIn(todayKey())) return
 
       showNotification(
-        'Did you get your exercise in?',
-        'Tap to tick off what you did and keep your streak going.',
+        'Did you complete your workout?',
+        'Tap to tick off what you did — that is what adds a day to your streak.',
         () => setShowCheckIn(true),
       )
     })
@@ -201,7 +247,13 @@ function App() {
     // a notification to reach. Closing it puts the tab underneath back.
     if (showCheckIn) {
       return (
-        <CheckInScreen goal={goal} onClose={() => setShowCheckIn(false)} />
+        <CheckInScreen
+          goal={goal}
+          // The calendar days, so the streak knows which day should have come
+          // before this one — see previousExpectedDay in streakStorage.js.
+          scheduledDays={routineDays}
+          onClose={() => setShowCheckIn(false)}
+        />
       )
     }
 
@@ -238,6 +290,15 @@ function App() {
             onReplaceDays={replaceDays}
             reminderTime={reminderTime}
             onSetTime={changeReminderTime}
+          />
+        )
+
+      case 'data':
+        return (
+          <DataScreen
+            goal={goal}
+            openAdd={askForMeasurements}
+            onAddOpened={() => setAskForMeasurements(false)}
           />
         )
 

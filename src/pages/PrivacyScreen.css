@@ -1,0 +1,92 @@
+/* ============================================================================
+   PrivacyScreen.css — styling used ONLY by Settings › Privacy and data.
+
+   The heading, divider and Back button come from App.css. What's left is the
+   list of promises and the limits box under it.
+   ============================================================================ */
+
+.privacy-screen {
+  justify-content: flex-start;
+  gap: 2.2vh;
+}
+
+.privacy-title {
+  font-size: clamp(22px, 6.4vw, 30px);
+}
+
+/* The opening line under the heading. */
+.privacy-lead {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(15px, 4.4vw, 18px);
+  line-height: 1.35;
+}
+
+/* ---- The promises -------------------------------------------------------- */
+
+.privacy-list {
+  /* Strip the bullets and indent a <ul> comes with — each item is its own
+     boxed card, which does the separating far better than a dot would. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* One promise. Outlined rather than filled: these are statements to read, not
+   buttons to tap, and filling them lemon would suggest otherwise. */
+.privacy-item {
+  padding: 14px;
+  text-align: left;
+
+  border: 3px solid #000;
+  border-radius: 12px;
+}
+
+.privacy-item-title {
+  /* <h2> comes with a large size and margins of its own; both are replaced. */
+  margin: 0 0 5px;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(15px, 4.4vw, 18px);
+  line-height: 1.25;
+}
+
+.privacy-item-body {
+  margin: 0 0 8px;
+
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* Trims the gap after the last paragraph in a box. */
+.privacy-item-body:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- The limits ---------------------------------------------------------- */
+
+/* Set apart from the promises above with a filled panel rather than an
+   outline, so it reads as a different KIND of statement — the caveats, not
+   more reassurance. Dark on light is the same treatment .form-error uses for
+   the other message in this app that must not be skimmed past. */
+.privacy-limits {
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 12px;
+}

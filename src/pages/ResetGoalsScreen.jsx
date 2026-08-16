@@ -71,7 +71,8 @@ function ResetGoalsScreen({ onReset, onBack }) {
           <p className="reset-note">
             Clears the goal you picked, every day chosen on the Routine
             calendar, your daily reminder time, every exercise you have ticked
-            off on any day, and your check-in streak. This cannot be undone.
+            off on any day, your check-in streak, and every weekly measurement
+            on your graph. This cannot be undone.
             <br />
             <br />
             Your account details — name, age, sex, height, weight and email —
