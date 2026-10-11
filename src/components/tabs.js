@@ -7,7 +7,7 @@
 // ============================================================================
 
 // Where the app is being served from: "/" on most hosts, but
-// "/Congressional-app-challege/" on GitHub Pages, which serves a project from a
+// "/Active-Living/" on GitHub Pages, which serves a project from a
 // folder named after the repository. Vite fills this in at build time from the
 // "base" setting in vite.config.js.
 //

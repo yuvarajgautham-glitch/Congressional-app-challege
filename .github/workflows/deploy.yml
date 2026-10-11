@@ -58,7 +58,7 @@ jobs:
       - run: npm ci
 
       # 4. Build. GITHUB_PAGES is what tells vite.config.js to use the
-      #    /Congressional-app-challege/ folder in every address — see the note
+      #    /Active-Living/ folder in every address — see the note
       #    on "base" in that file for why this matters.
       - run: npm run build
         env:

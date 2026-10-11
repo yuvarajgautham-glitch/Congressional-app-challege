@@ -20,7 +20,7 @@
 
 const CACHE_NAME = 'active-living-v2'
 
-// Where the app is served from: "/" on most hosts, "/Congressional-app-challege/"
+// Where the app is served from: "/" on most hosts, "/Active-Living/"
 // on GitHub Pages, which serves a project from a folder named after the repo.
 //
 // This file is copied across untouched — it is never bundled — so it cannot be
