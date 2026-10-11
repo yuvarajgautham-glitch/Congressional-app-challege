@@ -14,7 +14,12 @@
 // ============================================================================
 
 import { useState } from 'react'
-import { todayKey, loadDayPlan, saveDayPlan } from '../exerciseStorage'
+import {
+  todayKey,
+  loadDayPlan,
+  saveDayPlan,
+  loadDayNotes,
+} from '../exerciseStorage'
 import { currentStreak, isCheckedIn, recordCheckIn } from '../streakStorage'
 import { PLANS } from '../exercisePlans'
 import './CheckInScreen.css'
@@ -56,6 +61,11 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
     currentStreak(scheduledDays, dateKey),
   )
   const [isDone, setIsDone] = useState(() => isCheckedIn(dateKey))
+
+  // Whatever the user wrote against each exercise when planning. Read once and
+  // never changed here — this screen is for confirming what was done, not for
+  // rewriting the plan.
+  const ownNotes = goal ? loadDayNotes(dateKey, goal) : {}
 
   // Ticks one exercise, or clears it. Saved on every tap rather than waiting
   // for the check mark: the ticks and the confirmation are two different
@@ -148,7 +158,14 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
                   {isChecked && <span className="checkin-tick">&#10003;</span>}
                 </span>
 
-                <span className="checkin-text">{item.text}</span>
+                <span className="checkin-text">
+                  {item.text}
+
+                  {/* The user's own note, if they left one when planning. */}
+                  {ownNotes[item.id] && (
+                    <span className="checkin-own-note">{ownNotes[item.id]}</span>
+                  )}
+                </span>
               </button>
             </li>
           )

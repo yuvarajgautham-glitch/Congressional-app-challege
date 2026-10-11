@@ -55,6 +55,20 @@ export function formatNow(now) {
   return `${date} · ${time}`
 }
 
+// A date key written out in full: "Sunday, 16 August".
+//
+// The year is left off on purpose — this is used to confirm what day a reading
+// is being filed under, and anyone entering one today already knows the year.
+export function formatLongDate(dateKey) {
+  const [year, month, day] = dateKey.split('-').map(Number)
+
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  })
+}
+
 // A date key written short, for a chart axis: "16 Aug".
 //
 // Built from the key rather than a Date the caller happens to have, so every

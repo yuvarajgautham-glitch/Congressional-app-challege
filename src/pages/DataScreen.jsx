@@ -16,11 +16,12 @@
 // ============================================================================
 
 import { useState, useEffect } from 'react'
-import { todayKey, formatShortDate } from '../dates'
+import { todayKey, formatShortDate, formatLongDate } from '../dates'
 import {
   loadMeasurements,
   addMeasurement,
   latestMeasurement,
+  measurementFor,
 } from '../measurementsStorage'
 import { loadAccount, saveAccount } from '../accountStorage'
 import './DataScreen.css'
@@ -28,6 +29,14 @@ import './DataScreen.css'
 // The two things that can be plotted. Only ONE is ever drawn at a time — a
 // chart with two different scales up the side is genuinely misleading, because
 // the crossing point of the two lines means nothing at all.
+// The three meals, in the order they happen. Used both by the form and by the
+// list of past readings, so the two can never fall out of step.
+const MEALS = [
+  { id: 'breakfast', label: 'Breakfast' },
+  { id: 'lunch', label: 'Lunch' },
+  { id: 'dinner', label: 'Dinner' },
+]
+
 const SERIES = [
   { id: 'weight', label: 'Weight', unit: 'lb' },
   { id: 'bmi', label: 'BMI', unit: '' },
@@ -48,6 +57,15 @@ function bmiOf(entry) {
   const inches = entry.heightFeet * 12 + entry.heightInches
   if (!inches) return null
   return (703 * entry.weight) / (inches * inches)
+}
+
+// One meal from a reading, as text.
+//
+// Readings saved before meals existed have no "meals" at all, and a reading may
+// have been saved with some meals blank. This answers "" for every one of those
+// cases, so nothing downstream has to keep checking.
+function mealAt(entry, which) {
+  return (entry && entry.meals && entry.meals[which]) || ''
 }
 
 // Pulls the numbers to plot out of the saved readings.
@@ -317,12 +335,26 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
         <ul className="data-list">
           {[...entries].reverse().map((entry) => (
             <li key={entry.date} className="data-row">
-              <span className="data-row-date">
-                {formatShortDate(entry.date)}
-              </span>
-              <span className="data-row-value">
-                {`${entry.weight} lb · ${entry.heightFeet}' ${entry.heightInches}" · BMI ${bmiOf(entry).toFixed(1)}`}
-              </span>
+              <div className="data-row-top">
+                <span className="data-row-date">
+                  {formatShortDate(entry.date)}
+                </span>
+                <span className="data-row-value">
+                  {`${entry.weight} lb · ${entry.heightFeet}' ${entry.heightInches}" · BMI ${bmiOf(entry).toFixed(1)}`}
+                </span>
+              </div>
+
+              {/* The meals, only for days that have any. Shown under the
+                  numbers because that is the point of writing them down: seeing
+                  what you ate in a week the weight moved the way you wanted. */}
+              {MEALS.map((meal) =>
+                mealAt(entry, meal.id) ? (
+                  <p key={meal.id} className="data-row-meal">
+                    <span className="data-row-meal-name">{meal.label}</span>
+                    {mealAt(entry, meal.id)}
+                  </p>
+                ) : null,
+              )}
             </li>
           ))}
         </ul>
@@ -340,27 +372,80 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
 }
 
 // ============================================================================
-// The weekly form. Kept in this file because it is only ever used here, and
-// splitting it out would mean jumping between two files to follow one screen.
+// The measurement form. Kept in this file because it is only ever used here,
+// and splitting it out would mean jumping between two files to follow one
+// screen.
+//
+// It both ADDS and EDITS. Picking a date the app already has a reading for
+// brings that reading back for changing, rather than quietly starting a second
+// one that would overwrite the first.
 // ============================================================================
 function MeasurementForm({ onSave, onCancel }) {
-  // Starts from the last reading, or from the account if this is the first
-  // time. Most weeks nothing but the weight has changed, so pre-filling turns
-  // this into one number to check rather than four to re-enter.
-  const previous = latestMeasurement() || loadAccount()
+  // The date being written to. It starts at today and can be changed, which is
+  // what lets someone fix yesterday's entry, or fill in a day they missed.
+  const [dateKey, setDateKey] = useState(() => todayKey())
+
+  // The reading already saved for that date, if there is one. Worked out on
+  // every render because it has to follow the date box as it changes.
+  const existing = measurementFor(dateKey)
+
+  // What to fill the boxes with. In order of preference: the reading for this
+  // date if it exists, then the most recent reading, then the account details.
+  // Most weeks nothing but the weight has changed, so this turns the form into
+  // one number to check rather than six to re-enter.
+  const startingPoint = existing || latestMeasurement() || loadAccount()
 
   const [weight, setWeight] = useState(() =>
-    previous ? String(previous.weight) : '',
+    startingPoint ? String(startingPoint.weight) : '',
   )
   const [heightFeet, setHeightFeet] = useState(() =>
-    previous ? String(previous.heightFeet) : '',
+    startingPoint ? String(startingPoint.heightFeet) : '',
   )
   const [heightInches, setHeightInches] = useState(() =>
-    previous ? String(previous.heightInches) : '',
+    startingPoint ? String(startingPoint.heightInches) : '',
   )
-  const [age, setAge] = useState(() => (previous ? String(previous.age) : ''))
+  const [age, setAge] = useState(() =>
+    startingPoint ? String(startingPoint.age) : '',
+  )
+
+  // What they ate. Free text, and entirely optional — the point is to be able
+  // to look back at a week that went well and see what was different about it.
+  const [breakfast, setBreakfast] = useState(() => mealAt(existing, 'breakfast'))
+  const [lunch, setLunch] = useState(() => mealAt(existing, 'lunch'))
+  const [dinner, setDinner] = useState(() => mealAt(existing, 'dinner'))
 
   const [error, setError] = useState('')
+
+  // Changing the date reloads every box from whatever that day holds.
+  //
+  // Without this, picking a different date would leave today's numbers on
+  // screen and save them onto the other day — quietly overwriting a real
+  // reading with one that was never taken.
+  function handleDateChange(nextDate) {
+    // A date box can be cleared, and can be typed into a character at a time,
+    // so half-finished values arrive here. Ignoring anything that isn't a full
+    // date leaves the form on the last good one.
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(nextDate)) return
+
+    setDateKey(nextDate)
+    setError('')
+
+    const saved = measurementFor(nextDate)
+    const source = saved || latestMeasurement() || loadAccount()
+
+    if (source) {
+      setWeight(String(source.weight))
+      setHeightFeet(String(source.heightFeet))
+      setHeightInches(String(source.heightInches))
+      setAge(String(source.age))
+    }
+
+    // Meals come only from a reading actually saved on that date. Carrying
+    // yesterday's dinner onto today would be putting words in someone's mouth.
+    setBreakfast(mealAt(saved, 'breakfast'))
+    setLunch(mealAt(saved, 'lunch'))
+    setDinner(mealAt(saved, 'dinner'))
+  }
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -375,7 +460,11 @@ function MeasurementForm({ onSave, onCancel }) {
     // The same ranges the registration form uses. Checking again here matters:
     // a typo of 1600 lb would not just be wrong, it would flatten the whole
     // graph into a line along the bottom.
-    if (!Number.isFinite(weightNumber) || weightNumber < 20 || weightNumber > 1000) {
+    if (
+      !Number.isFinite(weightNumber) ||
+      weightNumber < 20 ||
+      weightNumber > 1000
+    ) {
       setError('Please enter a weight in pounds between 20 and 1000.')
       return
     }
@@ -385,7 +474,11 @@ function MeasurementForm({ onSave, onCancel }) {
       return
     }
 
-    if (!Number.isFinite(inchesNumber) || inchesNumber < 0 || inchesNumber > 11) {
+    if (
+      !Number.isFinite(inchesNumber) ||
+      inchesNumber < 0 ||
+      inchesNumber > 11
+    ) {
       setError('Inches must be between 0 and 11.')
       return
     }
@@ -396,17 +489,27 @@ function MeasurementForm({ onSave, onCancel }) {
     }
 
     const entry = {
-      date: todayKey(),
+      date: dateKey,
       weight: weightNumber,
       heightFeet: feetNumber,
       heightInches: inchesNumber,
       age: ageNumber,
+      // .trim() drops stray spaces, so a box holding nothing but a space counts
+      // as empty rather than as a meal nobody typed.
+      meals: {
+        breakfast: breakfast.trim(),
+        lunch: lunch.trim(),
+        dinner: dinner.trim(),
+      },
     }
 
     // The account is updated to match, so Account info and Your BMI show these
     // figures too rather than whatever was typed at sign-up months ago.
+    //
+    // Only when editing TODAY, though. Correcting a reading from three weeks
+    // ago should fix the graph, not rewrite what you weigh now.
     const account = loadAccount()
-    if (account) {
+    if (account && dateKey === todayKey()) {
       saveAccount({
         ...account,
         weight: weightNumber,
@@ -421,15 +524,45 @@ function MeasurementForm({ onSave, onCancel }) {
 
   return (
     <main className="screen data-screen">
-      <h1 className="title data-title">This week</h1>
+      <h1 className="title data-title">
+        {existing ? 'Edit reading' : 'New reading'}
+      </h1>
       <div className="title-rule" />
 
+      {/* The day this reading will be filed under. It follows the date box
+          below, so it always names the day being written to. */}
+      <p className="data-date">{formatLongDate(dateKey)}</p>
+
       <p className="data-intro">
-        Four numbers, once a week. They stay on your phone and are never sent
-        anywhere.
+        Add a reading whenever you like — today, or any day you missed. Once a
+        week is the easiest habit to keep, and enough to show a trend, since
+        weight moves around from one day to the next anyway.
       </p>
 
       <form className="account-form" onSubmit={handleSubmit}>
+        {/* ---- The date ----
+            First, because it decides what every box below is showing. */}
+        <label className="field-label" htmlFor="measure-date">
+          Date
+        </label>
+        <input
+          id="measure-date"
+          className="field-input"
+          type="date"
+          value={dateKey}
+          // No future dates. A reading you haven't taken yet isn't a reading,
+          // and one dated next month would stretch the graph out to meet it.
+          max={todayKey()}
+          onChange={(event) => handleDateChange(event.target.value)}
+        />
+
+        {/* Says plainly which of the two things this is about to do. */}
+        <p className="data-edit-note">
+          {existing
+            ? 'Editing the reading already saved for this day.'
+            : 'A new reading for this day.'}
+        </p>
+
         <label className="field-label" htmlFor="measure-weight">
           Weight
         </label>
@@ -491,6 +624,48 @@ function MeasurementForm({ onSave, onCancel }) {
           onChange={(event) => setAge(event.target.value)}
         />
 
+        {/* ---- What you ate ----
+            Optional on purpose. A form that refused to save until every meal
+            was written out would simply stop being used. */}
+        <h2 className="meals-heading">What you ate</h2>
+        <p className="meals-note">
+          Optional. Worth filling in for a week that went well — looking back at
+          what was different is how you find out what works for you.
+        </p>
+
+        <label className="field-label" htmlFor="measure-breakfast">
+          Breakfast
+        </label>
+        <textarea
+          id="measure-breakfast"
+          className="field-input meal-input"
+          rows="2"
+          value={breakfast}
+          onChange={(event) => setBreakfast(event.target.value)}
+        />
+
+        <label className="field-label" htmlFor="measure-lunch">
+          Lunch
+        </label>
+        <textarea
+          id="measure-lunch"
+          className="field-input meal-input"
+          rows="2"
+          value={lunch}
+          onChange={(event) => setLunch(event.target.value)}
+        />
+
+        <label className="field-label" htmlFor="measure-dinner">
+          Dinner
+        </label>
+        <textarea
+          id="measure-dinner"
+          className="field-input meal-input"
+          rows="2"
+          value={dinner}
+          onChange={(event) => setDinner(event.target.value)}
+        />
+
         {error && (
           <p className="form-error" role="alert">
             {error}
@@ -499,7 +674,7 @@ function MeasurementForm({ onSave, onCancel }) {
 
         <div className="form-buttons">
           <button type="submit" className="primary-button">
-            Save
+            {existing ? 'Save changes' : 'Save'}
           </button>
           <button type="button" className="ghost-button" onClick={onCancel}>
             Cancel

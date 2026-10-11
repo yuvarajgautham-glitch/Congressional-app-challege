@@ -12,6 +12,10 @@
    Because this rule comes from a file loaded after App.css and the element has
    BOTH classNames ("screen goals-screen"), this value wins. */
 .goals-screen {
+  /* Tighter than the 4vh in App.css: the page now stacks the chosen goals, a
+     heading, three cards and Clear goal, and the standard gap would push the
+     last of them off a small phone. */
+  gap: 2.2vh;
   justify-content: flex-start;
 }
 
@@ -83,4 +87,98 @@
   align-self: center;
   padding-left: 28px;
   padding-right: 28px;
+}
+
+/* ---- Your goals, shown in the open --------------------------------------- */
+
+/* The block at the TOP of the Goals tab listing what the user has already
+   ticked, so the page answers "what am I doing today?" without a tap.
+   Outlined rather than filled: it is something to read, not something to
+   press, and the lemon fill in this app means "button". */
+.current-goals {
+  width: 100%;
+  padding: 14px;
+  text-align: left;
+
+  border: 3px solid #000;
+  border-radius: 12px;
+}
+
+.current-goals-title {
+  /* <h2> arrives with a size and margins of its own; both are replaced. */
+  margin: 0 0 8px;
+
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(16px, 4.8vw, 19px);
+  line-height: 1.2;
+}
+
+.current-goals-list {
+  /* Strip the bullets and indent — each row has its own tick instead. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* One chosen exercise: the tick, then what it is. */
+.current-goal {
+  display: flex;
+  align-items: flex-start; /* Lines the tick up with the FIRST line of text. */
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.current-goal-tick {
+  flex: none; /* Never squashed by a long exercise name. */
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.current-goal-text {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  min-width: 0; /* Lets a long name wrap instead of widening the row. */
+}
+
+/* "Change these" — a quieter action than the goal cards below it, since the
+   list above is mostly there to be read. */
+.current-goals-edit {
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 15px;
+}
+
+/* The heading over the three cards. It tells the user what the cards are for
+   now that they are no longer the first thing on the page. */
+.goals-choose-title {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(16px, 4.8vw, 19px);
+  line-height: 1.2;
+}
+
+/* The user's own note on a chosen exercise, under the exercise it belongs to.
+   Italic and quieter, so a glance reads the list of exercises first and the
+   specifics second. display:block puts it on its own line inside the text. */
+.current-goal-own-note {
+  display: block;
+  margin-top: 2px;
+
+  font-size: 13px;
+  font-weight: 500;
+  font-style: italic;
+  opacity: 0.8;
+
+  /* A long note wraps instead of widening the row and scrolling the page. */
+  overflow-wrap: anywhere;
 }

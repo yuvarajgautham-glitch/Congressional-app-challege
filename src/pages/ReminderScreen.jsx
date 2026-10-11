@@ -236,8 +236,8 @@ function ReminderScreen({
           : permission === 'denied'
             ? 'Notifications are blocked for this app. Your phone or browser settings are where that gets switched back on.'
             : permission === 'granted'
-              ? 'Reminders arrive while the app is open. A web page cannot run once it is closed, so reminders with the app shut need a phone app or a notification server.'
-              : 'The browser will ask your permission when you save. Reminders arrive while the app is open — a web page cannot run once it is closed.'}
+              ? 'Reminders appear on your phone like any other notification, and tapping one opens the app on the right page — even if you have closed it since. Add Active Living to your home screen for the most reliable delivery.'
+              : 'The browser will ask your permission when you save. Reminders then appear on your phone like any other notification, and tapping one opens the app.'}
       </p>
 
       <button type="button" className="back-button" onClick={onBack}>

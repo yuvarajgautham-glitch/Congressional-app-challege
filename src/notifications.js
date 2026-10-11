@@ -8,17 +8,25 @@
 // ---------------------------------------------------------------------------
 // WHAT THIS CAN AND CANNOT DO — worth understanding before demonstrating it.
 //
-// A web page can only run code while it is OPEN. So this reminder fires at the
-// chosen time each day as long as the app is open in the browser. If the app is
-// closed, nothing runs, and nothing arrives.
+// SHOWING a reminder is real. It goes through the service worker, so it is a
+// proper system notification: it lands in the phone's notification list next to
+// every other app's, survives the page being closed, and can be tapped
+// afterwards to open the app on the right page.
 //
-// Real reminders that arrive with the app closed need something running
-// elsewhere: a proper phone app, or a server that pushes to the phone. The
-// notifo folder in this project is a notification server of exactly that kind —
-// it isn't wired up to this app, but it's the piece that would do this job.
+// DECIDING WHEN to show it is the limit. The timers below are ordinary
+// JavaScript, and JavaScript only runs while the app is running. So the clock
+// that decides "it's 7:30, show the reminder" needs the app open, or at least
+// recently open in the background. Close it for the day and nothing fires that
+// day.
 //
-// The screen that sets the time says all this plainly rather than promising
-// something the app can't deliver.
+// Closing that last gap needs WEB PUSH: a server that knows the time and sends
+// the notification to the phone, so nothing on the phone has to be awake. That
+// means running a server. The notifo folder in this project is a notification
+// server of exactly that kind — not wired up here, but it is the piece that
+// would do this job.
+//
+// The screen that sets the time says as much of this as a user needs, rather
+// than promising something the app can't deliver.
 // ---------------------------------------------------------------------------
 // ============================================================================
 
@@ -134,31 +142,104 @@ export function addHours(time, hours) {
   return `${String(nextHour).padStart(2, '0')}:${minutesText}`
 }
 
-// Shows one notification. Kept here so the wording lives next to the rest of
-// the notification code rather than being buried in a screen.
+// Whatever should happen when a notification is tapped. Set by App.jsx through
+// listenForNotificationClicks below, and kept here at module level so the
+// fallback path further down can reach it too.
+let clickHandler = null
+
+// Passes a tap from the service worker up to the app.
+function handleWorkerMessage(event) {
+  if (event.data && event.data.type === 'notification-click' && clickHandler) {
+    clickHandler(event.data.action)
+  }
+}
+
+// Starts listening for notification taps. Hand it a function that takes an
+// action name — 'checkin' or 'measure' — and does the right thing.
 //
-// onClick runs when the user taps the notification itself. That's what lets a
-// reminder open the app on the right page instead of just wherever they left
-// it — see App.jsx, which uses it to open the check-in.
-export function showNotification(title, body, onClick) {
+// Returns a function that stops listening, so React's useEffect can clean up.
+export function listenForNotificationClicks(handler) {
+  clickHandler = handler
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', handleWorkerMessage)
+  }
+
+  return () => {
+    clickHandler = null
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.removeEventListener('message', handleWorkerMessage)
+    }
+  }
+}
+
+// Shows one notification.
+//
+// "action" is a short name for what tapping it should do. It travels WITH the
+// notification rather than being a function held in memory, and that is the
+// whole point: a function only exists while the page does, but a notification
+// can sit in the phone's notification list for hours and be tapped long after
+// the page has been closed. A name survives that; a function cannot.
+//
+// HOW IT IS SHOWN, and why it changed. This used to be `new Notification(...)`,
+// created by the page. That has two problems:
+//
+//   1. Android Chrome REFUSES it outright — it throws, and insists the service
+//      worker shows notifications instead. So on Android, reminders were
+//      silently doing nothing at all.
+//   2. Even where it works, a page-owned notification belongs to the page. Ask
+//      the service worker instead and you get a real system notification: it
+//      goes to the phone's notification list, survives the page closing, and
+//      can still be tapped afterwards.
+//
+// So the service worker is asked first, and the old way is kept only as a
+// fallback for browsers that have no service worker at all.
+export async function showNotification(title, body, action) {
   if (notificationPermission() !== 'granted') return
 
+  const options = {
+    body,
+    // The app's own icon, so the notification is recognisably from here rather
+    // than showing the browser's logo.
+    icon: `${import.meta.env.BASE_URL}icon-192.png`,
+    badge: `${import.meta.env.BASE_URL}icon-192.png`,
+
+    // Notifications sharing a tag REPLACE each other instead of stacking, so a
+    // week away from the app doesn't come back to seven identical reminders.
+    tag: `active-living-${action}`,
+
+    // What the service worker reads when the notification is tapped.
+    data: { action },
+  }
+
+  if ('serviceWorker' in navigator) {
+    try {
+      // .ready waits until a service worker is actually in charge. On the very
+      // first visit registration may still be in progress, and asking too early
+      // would fail for no good reason.
+      const registration = await navigator.serviceWorker.ready
+      await registration.showNotification(title, options)
+      return
+    } catch {
+      // Fall through to the older way below.
+    }
+  }
+
+  // No service worker — an ordinary browser tab on a desktop, most likely.
   try {
-    const note = new window.Notification(title, { body })
+    const note = new window.Notification(title, options)
 
     note.onclick = () => {
       // Brings the app's window to the front. Without this the page would get
       // the click but stay behind whatever the user was looking at.
       window.focus()
 
-      onClick()
+      if (clickHandler) clickHandler(action)
 
-      // Tidies the notification away, since it has now been acted on.
       note.close()
     }
   } catch {
-    // Some browsers refuse to build a Notification directly and insist on a
-    // service worker. Nothing useful to do about it here — better a missing
-    // reminder than a crashed app.
+    // Nothing useful to do — better a missing reminder than a crashed app.
   }
 }

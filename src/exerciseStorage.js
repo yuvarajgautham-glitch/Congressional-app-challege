@@ -21,6 +21,16 @@
 
 const PLAN_KEY = 'activeLiving.exercisePlan'
 
+// Notes live under their OWN key rather than inside the plan above.
+//
+// The plan is a plain list of ids, and several screens already read it that
+// way. Reshaping it to carry notes would mean changing every one of them, and
+// would quietly break plans saved by an earlier version of the app. A second
+// key costs nothing and leaves all of that alone.
+//
+//   { "2026-10-10": { lose: { "brisk-walk": "3 miles around the park" } } }
+const NOTES_KEY = 'activeLiving.exerciseNotes'
+
 // The date keys used here are the same ones the Routine calendar uses, so they
 // come from the one place that builds them — dates.js. Two files inventing
 // their own date format is how a calendar and a saved plan end up disagreeing
@@ -86,7 +96,39 @@ export function saveDayPlan(dateKey, goalId, exerciseIds) {
   }
 }
 
-// Forgets every saved plan, for every date and every goal. Used by Settings ›
+// Reads every note for one date and goal, as { exerciseId: text }.
+// Always returns an object, so a caller can look up any id without checking.
+export function loadDayNotes(dateKey, goalId) {
+  try {
+    const saved = window.localStorage.getItem(NOTES_KEY)
+    const parsed = saved ? JSON.parse(saved) : null
+
+    // ?. gives undefined rather than crashing when the date or goal is absent.
+    const notes = parsed?.[dateKey]?.[goalId]
+
+    return notes && typeof notes === 'object' ? notes : {}
+  } catch {
+    return {}
+  }
+}
+
+// Saves the notes for one date and goal, replacing what was there.
+export function saveDayNotes(dateKey, goalId, notes) {
+  try {
+    const saved = window.localStorage.getItem(NOTES_KEY)
+    const all = saved ? JSON.parse(saved) || {} : {}
+
+    // Rebuilt rather than edited in place, so notes on a 'lose' plan cannot
+    // wipe out notes left on a 'gain' plan the same day.
+    const next = { ...all, [dateKey]: { ...all[dateKey], [goalId]: notes } }
+
+    window.localStorage.setItem(NOTES_KEY, JSON.stringify(next))
+  } catch {
+    // Storage unavailable — the notes still show for this visit.
+  }
+}
+
+// Forgets every saved plan, for every date and every goal. Used by Settings >
 // Reset goals.
 //
 // Each storage file clears its OWN key like this, rather than one place in the
@@ -95,6 +137,7 @@ export function saveDayPlan(dateKey, goalId, exerciseIds) {
 export function clearExercisePlans() {
   try {
     window.localStorage.removeItem(PLAN_KEY)
+    window.localStorage.removeItem(NOTES_KEY)
   } catch {
     // Storage blocked. Nothing was saved in the first place, so there is
     // nothing left to clear.

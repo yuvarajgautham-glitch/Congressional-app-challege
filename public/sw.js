@@ -18,7 +18,7 @@
 //      step below, which deletes every cache that isn't the current name.
 // ============================================================================
 
-const CACHE_NAME = 'active-living-v1'
+const CACHE_NAME = 'active-living-v2'
 
 // Where the app is served from: "/" on most hosts, "/Congressional-app-challege/"
 // on GitHub Pages, which serves a project from a folder named after the repo.
@@ -70,7 +70,59 @@ self.addEventListener('activate', (event) => {
   )
 })
 
-// ---- 3. Fetch: answer every request the app makes ---------------------------
+// ---- 3. Notification tapped -------------------------------------------------
+//
+// This is the part that makes a reminder actually useful. Because it runs in
+// the service worker rather than in the page, it works even when the app has
+// been closed since the notification appeared: the browser wakes this worker up
+// to handle the tap.
+//
+// Two cases, in order of preference:
+//
+//   the app is still open somewhere → bring that window to the front and tell
+//                                     it which page to show. Far better than
+//                                     opening a second copy of the app.
+//   the app is closed               → open it, with the destination written
+//                                     into the address so it knows where to go
+//                                     the moment it starts.
+self.addEventListener('notificationclick', (event) => {
+  // Takes the notification out of the phone's notification list. Without this
+  // it sits there looking unread after being acted on.
+  event.notification.close()
+
+  // What this notification was for — put there by showNotification().
+  const action = (event.notification.data && event.notification.data.action) || 'checkin'
+
+  // waitUntil keeps the worker alive until the work below finishes. Service
+  // workers are shut down aggressively when idle, and without this the browser
+  // could stop it mid-way through opening the window.
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({
+        type: 'window',
+        // Windows this worker isn't controlling yet count too — on the very
+        // first visit the page is open but not yet under the worker's control.
+        includeUncontrolled: true,
+      })
+
+      for (const client of windows) {
+        if (client.url.includes(BASE)) {
+          await client.focus()
+
+          // postMessage is how a service worker talks to a page. App.jsx is
+          // listening for this — see listenForNotificationClicks.
+          client.postMessage({ type: 'notification-click', action })
+          return
+        }
+      }
+
+      // Nothing open. Start the app, with ?open=... telling it where to go.
+      await self.clients.openWindow(`${BASE}?open=${action}`)
+    })(),
+  )
+})
+
+// ---- 4. Fetch: answer every request the app makes ---------------------------
 self.addEventListener('fetch', (event) => {
   const request = event.request
 

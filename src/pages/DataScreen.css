@@ -20,6 +20,20 @@
   font-size: clamp(24px, 7vw, 32px);
 }
 
+/* The date under the "This week" heading, on the measurement form. Set in the
+   heading font so it reads as part of the title rather than as body text, and
+   sits between the black divider and the explanation below it. */
+.data-date {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(15px, 4.4vw, 18px);
+  line-height: 1.3;
+}
+
 /* The line above the weekly form. */
 .data-intro {
   margin: 0;
@@ -242,4 +256,83 @@
 
 .data-add {
   width: 100%;
+}
+
+/* ---- The date and edit note on the form --------------------------------- */
+
+/* Says whether saving will create a reading or change one that already exists.
+   Sits directly under the date box, because the date is what decides which. */
+.data-edit-note {
+  margin: 4px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* ---- What you ate -------------------------------------------------------- */
+
+/* Marks the start of the meals, so the form reads as two parts: the numbers
+   that are plotted, and the notes that explain them. */
+.meals-heading {
+  margin: 22px 0 0;
+
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(17px, 5vw, 20px);
+  line-height: 1.2;
+}
+
+.meals-note {
+  margin: 4px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+/* The meal boxes. They share the app's white field look through .field-input;
+   these are the extras a <textarea> needs. */
+.meal-input {
+  /* A textarea can normally be dragged wider than the screen, which breaks the
+     layout. Vertical only keeps it inside the phone. */
+  resize: vertical;
+
+  /* A textarea defaults to a monospace-ish font in some browsers. */
+  font-family: var(--sans);
+  line-height: 1.35;
+}
+
+/* ---- Meals in the list of readings -------------------------------------- */
+
+/* The date and numbers, kept on one line above any meals for that day. */
+.data-row-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* A row can now be several lines tall, so it stacks instead of sitting in a
+   single row. This overrides the flex set on .data-row above. */
+.data-row {
+  display: block;
+}
+
+.data-row-meal {
+  margin: 5px 0 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.35;
+  opacity: 0.85;
+
+  /* A long meal breaks onto the next line instead of widening the row and
+     scrolling the whole page sideways. */
+  overflow-wrap: anywhere;
+}
+
+/* "Breakfast" in front of what was eaten. */
+.data-row-meal-name {
+  font-weight: 700;
+  margin-right: 6px;
 }

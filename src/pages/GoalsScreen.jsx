@@ -11,6 +11,8 @@
 
 import { useState } from 'react'
 import ExercisePlanScreen from './ExercisePlanScreen'
+import { todayKey, loadDayPlan, loadDayNotes } from '../exerciseStorage'
+import { PLANS } from '../exercisePlans'
 import './GoalsScreen.css'
 
 // The two choices, kept as a list so the buttons can be built with .map()
@@ -62,8 +64,25 @@ function GoalsScreen({ goal, onSelectGoal, onOpenRoutine }) {
       />
     )
   }
+  // ---- What the user has already chosen ------------------------------------
+  // Read fresh on every draw rather than kept in state, so coming back from the
+  // plan screen shows what was just saved. It's a small read from storage, and
+  // a stale copy here would be worse than the cost of re-reading it.
+  const plan = goal ? PLANS[goal] : null
+  const savedIds = goal ? loadDayPlan(todayKey(), goal) : []
 
-  // ---- The two goal cards --------------------------------------------------
+  // The user's own notes, so the list shows what they actually meant to do
+  // rather than only the general recommendation.
+  const savedNotes = goal ? loadDayNotes(todayKey(), goal) : {}
+
+  // Turned from saved ids back into the full recommendations, in the order the
+  // plan lists them. .filter on the plan rather than .map over the saved ids is
+  // deliberate: it quietly drops anything saved that is no longer in the plan,
+  // the same guard the plan screen uses.
+  const chosenItems = plan
+    ? plan.items.filter((item) => savedIds.includes(item.id))
+    : []
+
   return (
     <main className="screen goals-screen">
       <h1 className="title goals-title">Goals</h1>
@@ -71,6 +90,57 @@ function GoalsScreen({ goal, onSelectGoal, onOpenRoutine }) {
       {/* The same thick black divider used on the home screen — it's styled in
           App.css, so both screens can reuse it. */}
       <div className="title-rule" />
+
+      {/* ---- Your goals, in the open --------------------------------------
+          At the TOP, so opening this tab answers "what am I doing today?"
+          without tapping anything. Only drawn when there is something to show —
+          an empty box headed "your goals" would be worse than no box. */}
+      {chosenItems.length > 0 && (
+        <section className="current-goals">
+          <h2 className="current-goals-title">Your goals today</h2>
+
+          <ul className="current-goals-list">
+            {chosenItems.map((item) => (
+              <li key={item.id} className="current-goal">
+                {/* The tick is decoration — every item in this list is one the
+                    user chose, so a screen reader reading "✓" eight times would
+                    add nothing. The heading above already says what these are. */}
+                <span className="current-goal-tick" aria-hidden="true">
+                  &#10003;
+                </span>
+                <span className="current-goal-text">
+                  {item.text}
+
+                  {/* Shown only when there is one. */}
+                  {savedNotes[item.id] && (
+                    <span className="current-goal-own-note">
+                      {savedNotes[item.id]}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Goes back into the plan to change them. It reopens the goal that
+              is already chosen, so it never changes the goal by accident. */}
+          <button
+            type="button"
+            className="ghost-button current-goals-edit"
+            onClick={() => handleChoose(goal)}
+          >
+            Change these
+          </button>
+        </section>
+      )}
+
+      {/* ---- The goal cards ------------------------------------------------
+          Below the list above, because adding or changing a goal is the less
+          common thing to want. The heading changes to say which of the two
+          this is, rather than leaving three cards sitting there unexplained. */}
+      <h2 className="goals-choose-title">
+        {chosenItems.length > 0 ? 'Change or add a goal' : 'Choose a goal'}
+      </h2>
 
       <div className="goal-list">
         {/* One button per entry in the GOALS list above. "option" is just the

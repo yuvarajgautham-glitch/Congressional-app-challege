@@ -36,6 +36,15 @@ function isValid(entry) {
   )
 }
 
+// The measurement saved for one date, or null if that date has none.
+//
+// This is what makes the form able to EDIT rather than only add: choosing a
+// date it already knows about brings that day back for changing, instead of
+// silently starting a second reading that would replace the first.
+export function measurementFor(dateKey) {
+  return loadMeasurements().find((entry) => entry.date === dateKey) || null
+}
+
 // Reads every measurement, oldest first. Always returns a list.
 export function loadMeasurements() {
   try {

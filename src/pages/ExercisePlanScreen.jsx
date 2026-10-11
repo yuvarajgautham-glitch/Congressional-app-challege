@@ -16,7 +16,13 @@
 // ============================================================================
 
 import { useState } from 'react'
-import { todayKey, loadDayPlan, saveDayPlan } from '../exerciseStorage'
+import {
+  todayKey,
+  loadDayPlan,
+  saveDayPlan,
+  loadDayNotes,
+  saveDayNotes,
+} from '../exerciseStorage'
 import { PLANS } from '../exercisePlans'
 import './ExercisePlanScreen.css'
 
@@ -51,6 +57,19 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
     ),
   )
 
+  // The user's own note against each exercise, as { exerciseId: text }.
+  //
+  // The recommendations are general by design — "do 30 minutes of cardio" has
+  // to suit everyone. A note is where that becomes a particular thing the
+  // person actually intends to do.
+  const [notes, setNotes] = useState(() => loadDayNotes(dateKey, goalId))
+
+  // Changes one note. Builds a NEW object rather than editing the old one, for
+  // the same reason the ticks do: React only redraws when handed a new value.
+  function setNoteFor(id, text) {
+    setNotes((current) => ({ ...current, [id]: text }))
+  }
+
   // Ticks one exercise off, or clears it if it was already ticked. This is the
   // same add-or-remove pattern as toggleDay in App.jsx — and the same rule
   // applies: build a NEW list rather than editing the old one, because React
@@ -67,6 +86,14 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
   function handleSave() {
     saveDayPlan(dateKey, goalId, chosen)
 
+    // Only notes for exercises still ticked are kept. Unticking something and
+    // saving should not leave its note behind to reappear later.
+    const kept = {}
+    for (const id of chosen) {
+      if (notes[id] && notes[id].trim()) kept[id] = notes[id].trim()
+    }
+    saveDayNotes(dateKey, goalId, kept)
+
     // Order matters here. Saving has to finish BEFORE we leave, because moving
     // to another tab throws this screen away — anything left undone at that
     // point simply never happens.
@@ -77,6 +104,23 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
     // unread. Landing on Routine IS the confirmation.
   }
 
+  // ---- Ticked ones first ---------------------------------------------------
+  // The order the list is DRAWN in, which is not the order it is stored in.
+  // Anything ticked rises to the top, so what you have chosen sits together at
+  // the top of the screen instead of being scattered down a list of eight.
+  //
+  // The plan itself is never reordered — [...plan.items] copies it first.
+  // Sorting the real thing would permanently rearrange the recommendations,
+  // and the order they are written in is deliberate.
+  //
+  // Ticked items score 0 and unticked score 1, so subtracting puts the ticked
+  // ones first. JavaScript sorts are STABLE, which is what keeps the original
+  // order within each of the two groups rather than shuffling them.
+  const ordered = [...plan.items].sort(
+    (a, b) =>
+      (chosen.includes(a.id) ? 0 : 1) - (chosen.includes(b.id) ? 0 : 1),
+  )
+
   return (
     <main className="screen plan-screen">
       <h1 className="title plan-title">{plan.title}</h1>
@@ -85,7 +129,7 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
       <p className="plan-intro">{plan.intro}</p>
 
       <ul className="plan-list">
-        {plan.items.map((item) => {
+        {ordered.map((item) => {
           // Worked out once because the answer is needed three times below.
           const isChecked = chosen.includes(item.id)
 
@@ -118,6 +162,33 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
                   <span className="plan-item-note">{item.note}</span>
                 </span>
               </button>
+
+              {/* ---- Your own note ----
+                  Only once the exercise is ticked. An unticked recommendation
+                  isn't something you're doing, so a note on it would have
+                  nothing to describe — and eight boxes open at once would bury
+                  the list itself.
+
+                  It sits OUTSIDE the button on purpose. A text box inside a
+                  button is invalid HTML, and every tap meant for the box would
+                  toggle the tick instead. */}
+              {isChecked && (
+                <div className="plan-note-wrap">
+                  <label className="plan-note-label" htmlFor={`note-${item.id}`}>
+                    Your note
+                  </label>
+                  <textarea
+                    id={`note-${item.id}`}
+                    className="plan-note-input"
+                    rows="2"
+                    placeholder="e.g. 3 miles around the park, before school"
+                    value={notes[item.id] || ''}
+                    onChange={(event) =>
+                      setNoteFor(item.id, event.target.value)
+                    }
+                  />
+                </div>
+              )}
             </li>
           )
         })}

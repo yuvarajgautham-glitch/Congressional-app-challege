@@ -32,6 +32,7 @@ import {
   startDailyReminder,
   showNotification,
   addHours,
+  listenForNotificationClicks,
 } from './notifications'
 import CheckInScreen from './pages/CheckInScreen'
 import DataScreen from './pages/DataScreen'
@@ -157,6 +158,45 @@ function App() {
     // timer running loose.
   }
 
+  // ---- WHERE A TAPPED NOTIFICATION SHOULD LAND -----------------------------
+  // The notification carries a short name rather than a function, because it
+  // may be tapped long after the page that created it has gone. This turns that
+  // name back into a screen.
+  function openFromNotification(action) {
+    if (action === 'measure') {
+      setShowCheckIn(false)
+      setAskForMeasurements(true)
+      setActiveTab('data')
+      return
+    }
+
+    // 'checkin', and anything unrecognised. The check-in is the safe landing
+    // place: it's the reminder the user gets most often.
+    setShowCheckIn(true)
+  }
+
+  // Taps arriving while the app is running. The service worker sends these,
+  // having first brought this window to the front.
+  useEffect(() => {
+    return listenForNotificationClicks(openFromNotification)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Taps that STARTED the app. With nothing open to bring forward, the service
+  // worker launches the app with ?open=checkin on the end of the address, and
+  // this reads it on the way in.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('open')
+    if (!requested) return
+
+    openFromNotification(requested)
+
+    // Take it back out of the address bar, so reloading the page later doesn't
+    // reopen the check-in as though a notification had been tapped again.
+    window.history.replaceState({}, '', window.location.pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // ---- THE DAILY REMINDERS -------------------------------------------------
   // useEffect runs code AFTER the screen has been drawn, and is the right place
   // for anything outside React's own world — here, two timers.
@@ -196,11 +236,7 @@ function App() {
         showNotification(
           'Weekly check-in: your measurements',
           'Tap to update your weight, height and age. It stays on your phone.',
-          () => {
-            setShowCheckIn(false)
-            setAskForMeasurements(true)
-            setActiveTab('data')
-          },
+          'measure',
         )
         return
       }
@@ -210,7 +246,7 @@ function App() {
         'Today is one of your routine days. Your exercises are ready.',
         // Tapping it opens the check-in. Someone who exercises first and taps
         // afterwards lands exactly where they need to be.
-        () => setShowCheckIn(true),
+        'checkin',
       )
     })
 
@@ -226,7 +262,7 @@ function App() {
       showNotification(
         'Did you complete your workout?',
         'Tap to tick off what you did — that is what adds a day to your streak.',
-        () => setShowCheckIn(true),
+        'checkin',
       )
     })
 

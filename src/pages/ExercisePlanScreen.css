@@ -178,3 +178,55 @@
   font-weight: 600;
   opacity: 0.8;
 }
+
+/* ---- Your own note on an exercise --------------------------------------- */
+
+/* Indented to line up under the words of the row above, not the tick box, so
+   it reads as belonging to that exercise rather than being a new item. */
+.plan-note-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0 2px 14px;
+}
+
+.plan-note-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.75;
+}
+
+/* White, like every other box you type into in this app, so it is obvious it
+   can be typed in — the lemon rows around it are things you tap. */
+.plan-note-input {
+  width: 100%;
+  padding: 10px;
+
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 10px;
+
+  font-family: var(--sans);
+
+  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box
+     with smaller text, which throws the layout off. Never set this lower. */
+  font-size: 16px;
+  line-height: 1.35;
+  color: #000;
+
+  /* A textarea can otherwise be dragged wider than the screen. */
+  resize: vertical;
+}
+
+.plan-note-input:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+/* The grey hint text inside an empty box. */
+.plan-note-input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}
