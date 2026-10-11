@@ -5,7 +5,7 @@
    What's left here is the tick list.
    ============================================================================ */
 
-/* Start from the top rather than centring: this is a long list, and a centred
+/* Start from the top rather than centering: this is a long list, and a centered
    one would sit oddly once it fills the screen. The gap is tighter than the 4vh
    in App.css because there are several blocks to stack. */
 .plan-screen {
@@ -53,7 +53,7 @@
   display: flex;
 
   /* Line the box up with the FIRST line of text rather than the middle of the
-     block. On a two-line recommendation, centring would leave the box floating
+     block. On a two-line recommendation, centering would leave the box floating
      opposite the gap between the lines. */
   align-items: flex-start;
 
@@ -226,7 +226,44 @@
   outline-offset: 2px;
 }
 
-/* The grey hint text inside an empty box. */
+/* The gray hint text inside an empty box. */
 .plan-note-input::placeholder {
   color: rgba(0, 0, 0, 0.45);
+}
+
+/* ---- Links to further reading -------------------------------------------- */
+
+/* Small print under the goal's opening line. Deliberately quieter than the
+   list below it: these are a door out of the app, not the thing the page is
+   for. */
+.plan-links {
+  margin: 0;
+  width: 100%;
+  text-align: left;
+
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* The web addresses themselves. Black with an underline rather than the
+   browser's default blue, which would be the only blue in the whole app and
+   would fight with the green. The underline is what still marks them as links
+   once the color is gone — never rely on color alone for that. */
+.plan-link {
+  color: #000;
+  font-weight: 700;
+  text-decoration: underline;
+
+  /* A long address breaks across lines instead of pushing the page sideways. */
+  overflow-wrap: anywhere;
+}
+
+/* A clear outline when reached by keyboard, so someone tabbing through can see
+   where they are. */
+.plan-link:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
 }

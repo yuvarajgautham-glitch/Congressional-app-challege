@@ -13,7 +13,7 @@
 
    It used to be the JPEG itself, zoomed in on the runner, with the leftover
    green hidden by mix-blend-mode: darken. That worked only while the page
-   behind it was a flat colour darker than the JPEG's green — which a gradient
+   behind it was a flat color darker than the JPEG's green — which a gradient
    running from dark to bright can't be. A picture with real transparency has no
    such condition: it sits correctly on any background, which is the whole
    reason for switching. */
@@ -34,7 +34,7 @@
      it's shown at, so it stays sharp on a high-resolution phone screen. */
   background-size: contain;
 
-  /* Don't tile the picture — show it once, centred. */
+  /* Don't tile the picture — show it once, centered. */
   background-repeat: no-repeat;
   background-position: center;
 }

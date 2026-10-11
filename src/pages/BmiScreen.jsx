@@ -158,7 +158,7 @@ function BmiScreen({ onBack }) {
           })}
 
           {/* The pointer. left: positions it along the bar, and the CSS shifts
-              it half its own width back so it's centred on the spot. */}
+              it half its own width back so it's centered on the spot. */}
           <div className="bmi-marker" style={{ left: `${markerPercent}%` }} />
         </div>
 

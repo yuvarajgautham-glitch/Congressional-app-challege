@@ -120,9 +120,9 @@ export const PLANS = {
         note: 'Stand and move for a minute or two every hour. It adds up more than it sounds like it should.',
       },
       {
-        id: 'colours',
-        text: 'Eat fruit and vegetables of different colours',
-        note: 'The range of colours across a day is roughly the range of vitamins and minerals you get.',
+        id: 'colors',
+        text: 'Eat fruit and vegetables of different colors',
+        note: 'The range of colors across a day is roughly the range of vitamins and minerals you get.',
       },
       {
         id: 'balanced',

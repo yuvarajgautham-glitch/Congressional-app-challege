@@ -30,7 +30,7 @@
      leaving it see-through lets that one gradient show through every screen. */
   background: none;
 
-  color: #000; /* #000 is black. Colours can be written as #rrggbb in hex. */
+  color: #000; /* #000 is black. Colors can be written as #rrggbb in hex. */
 }
 
 /* ---- Pieces every screen shares ----------------------------------------- */
@@ -46,7 +46,7 @@
 
   /* In a flex COLUMN these two mean:
        align-items     → left-to-right position (center = middle of the screen)
-       justify-content → top-to-bottom position (center = vertically centred) */
+       justify-content → top-to-bottom position (center = vertically centered) */
   align-items: center;
   justify-content: center;
 
@@ -173,7 +173,7 @@
   border-radius: 10px;
   cursor: pointer; /* Show the hand pointer on a computer. */
 
-  /* Removes the grey flash phones show when you tap something. */
+  /* Removes the gray flash phones show when you tap something. */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -191,7 +191,7 @@
 }
 
 /* The icons are black drawings on a see-through background, so there is nothing
-   to do here but size them — no colour flipping, no blending.
+   to do here but size them — no color flipping, no blending.
 
    They used to be white-on-black squares that had to be inverted and blended to
    hide the square. See the note in components/tabs.js for why that had to go. */
@@ -300,7 +300,7 @@
   line-height: 1;
 }
 
-/* ---- Labelled text boxes ------------------------------------------------- */
+/* ---- Labeled text boxes ------------------------------------------------- */
 /* Used by the account forms and by the reminder time, so they live here. */
 
 .field-label {
@@ -362,7 +362,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The quieter button beside it — Cancel. Same colour and size, thinner border,
+/* The quieter button beside it — Cancel. Same color and size, thinner border,
    so the eye lands on the main action first. */
 .ghost-button {
   padding: 16px 18px;
@@ -386,7 +386,7 @@
 
 /* A button that can't be used yet — the Save on the reminder screen before a
    time is picked. Fading it AND changing the cursor gives two signals rather
-   than relying on colour alone, which not everyone can judge. */
+   than relying on color alone, which not everyone can judge. */
 .primary-button:disabled,
 .ghost-button:disabled {
   opacity: 0.5;

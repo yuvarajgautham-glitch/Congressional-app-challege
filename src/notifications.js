@@ -102,7 +102,7 @@ export function startDailyReminder(time, onFire) {
     return () => {}
   }
 
-  // The pending timer, kept so it can be cancelled by the stop function.
+  // The pending timer, kept so it can be canceled by the stop function.
   let timerId = null
 
   // Sets the timer for the next occurrence. It calls ITSELF after firing, which

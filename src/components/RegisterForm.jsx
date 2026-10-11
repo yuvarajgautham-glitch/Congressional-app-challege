@@ -49,7 +49,7 @@ function RegisterForm({ onCreate, onCancel }) {
   // "async" because scrambling the password takes a moment and hands back a
   // promise. The checks below are unchanged; only the very end waits.
   async function handleSubmit(event) {
-    // Browsers reload the whole page when a form is submitted — behaviour from
+    // Browsers reload the whole page when a form is submitted — behavior from
     // long before apps like this existed. This line stops that.
     event.preventDefault()
 

@@ -36,7 +36,7 @@ function ResetGoalsScreen({ onReset, onBack }) {
 
         <p className="quote">Your goals have been reset.</p>
 
-        <p className="reset-note reset-note-centred">
+        <p className="reset-note reset-note-centered">
           Your goal, your calendar, your reminder, your streak and every
           exercise you had ticked off are gone. Your account details were left
           untouched.

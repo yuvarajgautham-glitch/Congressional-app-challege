@@ -5,7 +5,7 @@
    screen shares. What's left is the calendar itself.
    ============================================================================ */
 
-/* App.css centres a screen's content vertically. The sketch puts the heading at
+/* App.css centers a screen's content vertically. The sketch puts the heading at
    the top with the calendar below, so we line things up from the top instead.
 
    The gap is tighter than the 4vh in App.css because there's a lot to stack
@@ -61,7 +61,7 @@
 }
 
 /* Shares the box shape with the app's other form fields, via .field-input in
-   App.css. These are the extras a <select> needs — including the colour, since
+   App.css. These are the extras a <select> needs — including the color, since
    this one is meant to sit INTO the green background rather than stand out
    from it the way a box you type into should. */
 .month-select {
@@ -106,7 +106,7 @@
    which ignores page styling entirely — the list will look like every other
    iOS picker whatever we put here. There's no way around that from a web page,
    and it's the reason the box itself is styled too rather than relying on the
-   open list to carry the colour.
+   open list to carry the color.
 
    This is the one place that uses the flat --green rather than the gradient:
    the browser draws this list in its own little window outside the page, where
@@ -180,7 +180,7 @@
      wide the phone is. 1 / 1 means "1 wide for every 1 tall". */
   aspect-ratio: 1 / 1;
 
-  /* Centre the day number both across and down inside its square. */
+  /* Center the day number both across and down inside its square. */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -212,7 +212,7 @@
 }
 
 /* A day that has already gone. Faded and drawn with a dashed outline: two
-   signals rather than one, so it doesn't rely on noticing a shade of grey.
+   signals rather than one, so it doesn't rely on noticing a shade of gray.
    The disabled attribute in the JSX is what actually stops the tap — this only
    makes that visible. */
 .day:disabled {

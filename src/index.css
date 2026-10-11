@@ -1,7 +1,7 @@
 /* ============================================================================
    index.css — site-wide styling.
 
-   This file sets up things that apply to the WHOLE app: the colours, the fonts,
+   This file sets up things that apply to the WHOLE app: the colors, the fonts,
    and the phone-shaped frame everything sits inside. Styling for individual
    screens lives in App.css and in the pages/ folder.
 
@@ -10,7 +10,7 @@
    ============================================================================ */
 
 /* :root means "the whole document". Defining values here makes them available
-   everywhere. Names starting with -- are CSS VARIABLES: set the colour once,
+   everywhere. Names starting with -- are CSS VARIABLES: set the color once,
    use it in twenty places, and change all twenty by editing this one line. */
 :root {
   /* THE BACKGROUND. Every page shares one vertical gradient: a deep green at
@@ -21,7 +21,7 @@
   --green-top: #05690d;
   --green-bottom: #3fae0e;
 
-  /* 180deg means top to bottom. The two stops are the colours above, so
+  /* 180deg means top to bottom. The two stops are the colors above, so
      editing those two lines re-themes the whole app. */
   --green-gradient: linear-gradient(
     180deg,
@@ -64,7 +64,7 @@
      text with lines spaced at 145% of that. Everything inherits this. */
   font: 16px/145% var(--sans);
 
-  /* Tells the browser this design is light-coloured, so it doesn't try to
+  /* Tells the browser this design is light-colored, so it doesn't try to
      auto-darken form controls for people using dark mode. */
   color-scheme: light;
 
@@ -94,7 +94,7 @@ body {
 
 /* #root targets the one element with id="root" — the div in index.html that
    React fills in. This is the PHONE FRAME: the app is built for phone screens,
-   so on a computer it stays a narrow centred column instead of stretching. */
+   so on a computer it stays a narrow centered column instead of stretching. */
 #root {
   width: 100%;
 
@@ -107,7 +107,7 @@ body {
   height: 100svh;
 
   /* "0 auto" = no space above/below, automatic space left/right. Equal
-     automatic space on both sides is what centres the frame. */
+     automatic space on both sides is what centers the frame. */
   margin: 0 auto;
 
   /* FLEXBOX: lay the children out in a row or column, and share out space.

@@ -5,7 +5,7 @@
    screen uses those too. What's left is the two goal cards.
    ============================================================================ */
 
-/* App.css centres each screen's content vertically. The sketch for this page
+/* App.css centers each screen's content vertically. The sketch for this page
    has the heading at the TOP with the cards below it, so we override that one
    setting here. flex-start means "line up from the start", i.e. the top.
 

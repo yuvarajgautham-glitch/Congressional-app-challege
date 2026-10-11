@@ -6,8 +6,8 @@
    the signed-in details.
    ============================================================================ */
 
-/* Line content up from the top rather than centring it vertically — forms are
-   tall, and a centred one jumps around as error messages appear. */
+/* Line content up from the top rather than centering it vertically — forms are
+   tall, and a centered one jumps around as error messages appear. */
 .account-screen {
   justify-content: flex-start;
 
@@ -89,7 +89,7 @@ select.field-input {
 
   /* Near-black rather than red: red on this green is genuinely hard to read,
      and it fits the app's black-on-green look. The message itself carries the
-     meaning, which is better practice anyway — colour alone is no use to
+     meaning, which is better practice anyway — color alone is no use to
      someone who can't distinguish it. */
   background: #1a1a1a;
   color: #fff;

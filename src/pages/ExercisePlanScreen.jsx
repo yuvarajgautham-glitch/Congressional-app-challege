@@ -128,6 +128,42 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
 
       <p className="plan-intro">{plan.intro}</p>
 
+      {/* ---- Where to read more -------------------------------------------
+          Under the goal's own opening line, so it sits with the advice it
+          extends. The list below is deliberately short and general; these point
+          at a proper health service for anyone who wants real depth on the
+          eating and exercise behind it.
+
+          target="_blank" opens them in a separate tab, so tapping one doesn't
+          throw away ticks that haven't been saved yet.
+
+          rel="noopener noreferrer" goes with it every time. Without "noopener"
+          the page that opens is handed a reference back to this one and could
+          redirect it; "noreferrer" stops the other site being told where the
+          visitor came from. Neither sends anything about the user — the app
+          still makes no requests of its own. */}
+      <p className="plan-links">
+        For healthy eating recipe ideas:{' '}
+        <a
+          className="plan-link"
+          href="https://www.nhs.uk/healthier-families/recipes/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          nhs.uk/healthier-families/recipes
+        </a>
+        <br />
+        For healthy exercise ideas:{' '}
+        <a
+          className="plan-link"
+          href="https://www.nhs.uk/live-well/exercise/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          nhs.uk/live-well/exercise
+        </a>
+      </p>
+
       <ul className="plan-list">
         {ordered.map((item) => {
           // Worked out once because the answer is needed three times below.
@@ -218,7 +254,7 @@ function ExercisePlanScreen({ goalId, onBack, onSaved }) {
           Save and go to Routine
         </button>
 
-        {/* Explains the greyed-out button. A disabled control with no reason
+        {/* Explains the grayed-out button. A disabled control with no reason
             given is the kind of thing people tap three times and give up on. */}
         {chosen.length === 0 && (
           <p className="plan-hint">Tick at least one exercise to continue.</p>

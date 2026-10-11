@@ -62,9 +62,9 @@
   opacity: 0.85;
 }
 
-/* The same small print, centred, for the confirmation shown afterwards — there
+/* The same small print, centered, for the confirmation shown afterwards — there
    is no button for it to line up under there. */
-.reset-note-centred {
+.reset-note-centered {
   text-align: center;
   width: 100%;
 }

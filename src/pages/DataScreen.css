@@ -4,7 +4,7 @@
    The heading, divider, form fields and buttons come from App.css. What's left
    is the graph.
 
-   A note on the colours below: the chart sits on a WHITE card rather than on
+   A note on the colors below: the chart sits on a WHITE card rather than on
    the green gradient. A thin 2px line needs a calm, even background to read
    against, and the gradient is neither — the same line would be strong at the
    top of the screen and muddy at the bottom. White also matches the app's text
@@ -144,7 +144,7 @@
   cursor: pointer;
 }
 
-/* Axis numbers and dates. Text stays in ink, never in the colour of the data —
+/* Axis numbers and dates. Text stays in ink, never in the color of the data —
    the line carries the identity, the words stay readable. */
 .chart-axis-label {
   fill: rgba(0, 0, 0, 0.65);
@@ -234,8 +234,8 @@
   gap: 10px;
   padding: 7px 0;
 
-  /* A hairline between rows, in black at low opacity rather than grey, so it
-     sits on the green without looking like a different colour. */
+  /* A hairline between rows, in black at low opacity rather than gray, so it
+     sits on the green without looking like a different color. */
   border-top: 1px solid rgba(0, 0, 0, 0.2);
 
   font-family: var(--sans);

@@ -12,7 +12,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 // Importing a .css file just tells the build tool "include these styles".
-// index.css holds the site-wide styling (colours, the phone-shaped frame).
+// index.css holds the site-wide styling (colors, the phone-shaped frame).
 import './index.css'
 
 // Our own top-level component. The './' means "a file in this same folder".

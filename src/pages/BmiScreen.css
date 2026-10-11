@@ -80,7 +80,7 @@
   height: 100%;
 }
 
-/* The bands are shaded rather than coloured red/amber/green on purpose. Traffic
+/* The bands are shaded rather than colored red/amber/green on purpose. Traffic
    lights would read as a verdict on the person, which a rough screening number
    has no business delivering — and on this green background red is hard to read
    anyway. Darker simply means "further from the middle of the scale". */
@@ -112,7 +112,7 @@
 
   /* "left" positions the marker's LEFT EDGE at the right percentage, which
      would leave it sitting slightly past the mark. Sliding it back by half its
-     own width centres it on the spot instead. */
+     own width centers it on the spot instead. */
   transform: translateX(-4px);
 }
 

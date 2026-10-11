@@ -9,7 +9,7 @@
    The heading and black divider also come from App.css.
    ============================================================================ */
 
-/* Line the content up from the top, as in the sketch, instead of centring it
+/* Line the content up from the top, as in the sketch, instead of centering it
    vertically the way App.css does by default. */
 .settings-screen {
   justify-content: flex-start;
