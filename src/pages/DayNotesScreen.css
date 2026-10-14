@@ -1,0 +1,172 @@
+/* ============================================================================
+   DayNotesScreen.css — styling used ONLY by Routine › one day.
+
+   The heading, divider, buttons and Back button come from App.css. What's left
+   is the status line, the list of exercise notes, and the writing box.
+   ============================================================================ */
+
+.daynotes-screen {
+  justify-content: flex-start;
+  gap: 2.2vh;
+}
+
+/* The date is the heading, and dates run long — "Thursday, 15 October" needs
+   more room than "Goals" does. */
+.daynotes-title {
+  font-size: clamp(20px, 5.8vw, 28px);
+}
+
+/* ---- Is this day in the routine? ---------------------------------------- */
+
+.daynotes-status {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+.daynotes-status-text {
+  margin: 0;
+  text-align: left;
+
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(15px, 4.4vw, 18px);
+  line-height: 1.3;
+}
+
+.daynotes-toggle {
+  width: 100%;
+  font-size: 15px;
+}
+
+/* ---- Blocks -------------------------------------------------------------- */
+
+.daynotes-block {
+  width: 100%;
+  text-align: left;
+}
+
+.daynotes-heading {
+  /* <h2> arrives with a size and margins of its own; both are replaced. */
+  margin: 0 0 10px;
+
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(16px, 4.8vw, 19px);
+  line-height: 1.2;
+}
+
+/* ---- Notes written on exercises ----------------------------------------- */
+
+.daynotes-list {
+  /* Strip the bullets and indent — each note is its own boxed card. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Outlined rather than filled: these are read here, not tapped. The lemon fill
+   everywhere else in this app means "button". */
+.daynotes-item {
+  padding: 13px 14px;
+  border: 3px solid #000;
+  border-radius: 12px;
+}
+
+/* Which exercise the note belongs to. */
+.daynotes-item-exercise {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+/* What the user actually wrote — the point of the card, so it reads loudest
+   of the three lines despite being the smallest font. */
+.daynotes-item-note {
+  margin: 5px 0 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  /* A long note wraps instead of pushing the page sideways. */
+  overflow-wrap: anywhere;
+}
+
+/* Which goal it was written under — the quietest line, since it is context
+   rather than content. */
+.daynotes-item-goal {
+  margin: 7px 0 0;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+.daynotes-hint {
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* ---- The writing box ----------------------------------------------------- */
+
+.daynotes-label {
+  display: block;
+  margin-bottom: 6px;
+
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.75;
+}
+
+/* White, like every other box you type into in this app, so it is obvious it
+   can be typed in — the lemon shapes around it are things you tap. */
+.daynotes-input {
+  width: 100%;
+  padding: 12px;
+
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 10px;
+
+  font-family: var(--sans);
+
+  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box
+     with smaller text, which throws the layout off. Never set this lower. */
+  font-size: 16px;
+  line-height: 1.4;
+  color: #000;
+
+  /* A textarea can otherwise be dragged wider than the screen. */
+  resize: vertical;
+}
+
+.daynotes-input:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+.daynotes-input::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.daynotes-save {
+  width: 100%;
+  margin-top: 10px;
+}

@@ -128,6 +128,24 @@ export function saveDayNotes(dateKey, goalId, notes) {
   }
 }
 
+
+// Every note saved on one date, whichever goal it was written under.
+//
+// loadDayNotes above answers for ONE goal. The calendar does not know or
+// care which goal was active when a note was written — it just wants
+// everything written for that day — so this hands back the lot, as
+// { goalId: { exerciseId: text } }.
+export function loadNotesForDate(dateKey) {
+  try {
+    const saved = window.localStorage.getItem(NOTES_KEY)
+    const parsed = saved ? JSON.parse(saved) : null
+    const forDate = parsed?.[dateKey]
+
+    return forDate && typeof forDate === 'object' ? forDate : {}
+  } catch {
+    return {}
+  }
+}
 // Forgets every saved plan, for every date and every goal. Used by Settings >
 // Reset goals.
 //

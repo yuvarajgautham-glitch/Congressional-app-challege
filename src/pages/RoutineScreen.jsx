@@ -16,14 +16,17 @@
 
 import { useState, useEffect } from 'react'
 import ReminderScreen from './ReminderScreen'
+import DayNotesScreen from './DayNotesScreen'
 import {
   WEEKDAY_NAMES,
   todayKey,
   formatNow,
   formatMonth,
+  formatLongDate,
   addMonths,
   buildMonthGrid,
 } from '../dates'
+import { loadDayNote } from '../routineStorage'
 import './RoutineScreen.css'
 
 // How many months the dropdown offers: this one and the next eleven. A year
@@ -51,6 +54,24 @@ function RoutineScreen({
   // Routine tab and coming back should show the calendar again, not drop the
   // user back inside a sub-page.
   const [showReminder, setShowReminder] = useState(false)
+
+  // The date most recently tapped on the calendar, or null before any tap.
+  //
+  // Tapping a square does two things that are easy to confuse: it adds or
+  // removes the day from the routine, AND it makes that day the one the
+  // button below the calendar refers to. Keeping the second as its own value
+  // means a day can be opened whether or not it is part of the routine.
+  const [pickedDay, setPickedDay] = useState(null)
+
+  // Whether that day’s own page is open.
+  const [showDay, setShowDay] = useState(false)
+
+  // Tapping a calendar square. Toggling the routine is the job it already
+  // had; remembering which day was tapped is the new one.
+  function handleDayTap(dateKey) {
+    onToggleDay(dateKey)
+    setPickedDay(dateKey)
+  }
 
   // Which month is on screen, counted from the current one: 0 is this month,
   // 1 is next month, and so on. Storing the OFFSET rather than a date keeps
@@ -102,6 +123,20 @@ function RoutineScreen({
         onReplaceDays={onReplaceDays}
         onSetTime={onSetTime}
         onBack={() => setShowReminder(false)}
+      />
+    )
+  }
+
+  // ---- One day’s own page --------------------------------------------
+  // Same pattern as the reminder screen above: returned early, so nothing
+  // below runs while it is open.
+  if (showDay && pickedDay) {
+    return (
+      <DayNotesScreen
+        dateKey={pickedDay}
+        isChosen={routineDays.includes(pickedDay)}
+        onToggle={() => onToggleDay(pickedDay)}
+        onBack={() => setShowDay(false)}
       />
     )
   }
@@ -216,7 +251,7 @@ function RoutineScreen({
                 aria-label={`${cell.key}${isToday ? ', today' : ''}${
                   isChosen ? ', chosen' : ''
                 }`}
-                onClick={() => onToggleDay(cell.key)}
+                onClick={() => handleDayTap(cell.key)}
               >
                 {cell.day}
               </button>
@@ -224,6 +259,32 @@ function RoutineScreen({
           })}
         </div>
       </div>
+
+      {/* ---- The day you just tapped --------------------------------------
+          Appears only once a square has been tapped, naming that day so the
+          button is never a mystery. It sits between the calendar and Save
+          because it is about the tap that just happened. */}
+      {pickedDay && (
+        <div className="picked-day">
+          <p className="picked-day-text">
+            {`${formatLongDate(pickedDay)} is ${
+              routineDays.includes(pickedDay) ? 'in' : 'not in'
+            } your routine.`}
+          </p>
+
+          <button
+            type="button"
+            className="ghost-button picked-day-open"
+            onClick={() => setShowDay(true)}
+          >
+            {/* Says whether there is already something to read, so the
+                button is worth pressing for a reason the user can see. */}
+            {loadDayNote(pickedDay)
+              ? 'Open this day \u2014 you have notes'
+              : 'Open this day and add notes'}
+          </button>
+        </div>
+      )}
 
       {/* ---- Save ----
           At the foot of the page, after the calendar, so it reads as the last

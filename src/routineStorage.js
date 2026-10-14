@@ -17,6 +17,16 @@
 const DAYS_KEY = 'activeLiving.routineDays'
 const TIME_KEY = 'activeLiving.reminderTime'
 
+// A free note the user can write against any one day on the calendar —
+// "away at my cousin's", "swim instead of run", "rest, knee sore".
+//
+// Separate from the exercise notes in exerciseStorage.js, which belong to a
+// particular exercise under a particular goal. This one belongs to the day
+// itself, so it survives changing goals and needs no goal to be set at all.
+//
+//   { "2026-10-15": "Swim instead of run — pool closes at 7" }
+const DAY_NOTES_KEY = 'activeLiving.dayNotes'
+
 // Reads the chosen dates. Always returns a list, empty if nothing is saved.
 export function loadRoutineDays() {
   try {
@@ -76,6 +86,50 @@ export function saveReminderTime(time) {
   }
 }
 
+
+// Reads the free note for one day. Returns '' when there isn't one, which is
+// also what an empty text box gives back, so the two agree.
+export function loadDayNote(dateKey) {
+  try {
+    const saved = window.localStorage.getItem(DAY_NOTES_KEY)
+    const parsed = saved ? JSON.parse(saved) : null
+    const note = parsed?.[dateKey]
+
+    return typeof note === 'string' ? note : ''
+  } catch {
+    return ''
+  }
+}
+
+// Saves the free note for one day. An empty note is REMOVED rather than
+// stored as empty text, so clearing a note leaves nothing behind.
+export function saveDayNote(dateKey, text) {
+  try {
+    const saved = window.localStorage.getItem(DAY_NOTES_KEY)
+    const all = saved ? JSON.parse(saved) || {} : {}
+
+    const trimmed = text.trim()
+    if (trimmed) all[dateKey] = trimmed
+    else delete all[dateKey]
+
+    window.localStorage.setItem(DAY_NOTES_KEY, JSON.stringify(all))
+  } catch {
+    // Storage unavailable — the note still shows for this visit.
+  }
+}
+
+// How many days have a note. Used to tell the user there is something to
+// read before they open a day.
+export function countDayNotes() {
+  try {
+    const saved = window.localStorage.getItem(DAY_NOTES_KEY)
+    const parsed = saved ? JSON.parse(saved) : null
+
+    return parsed ? Object.keys(parsed).length : 0
+  } catch {
+    return 0
+  }
+}
 // Forgets the chosen dates AND the reminder time. Used by Settings › Reset
 // goals. Both keys belong to this file, so both are cleared here — see the
 // matching note in exerciseStorage.js.
@@ -83,6 +137,7 @@ export function clearRoutine() {
   try {
     window.localStorage.removeItem(DAYS_KEY)
     window.localStorage.removeItem(TIME_KEY)
+    window.localStorage.removeItem(DAY_NOTES_KEY)
   } catch {
     // Storage blocked. Nothing was saved in the first place, so there is
     // nothing left to clear.
