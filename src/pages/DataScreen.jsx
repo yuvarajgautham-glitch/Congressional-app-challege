@@ -1,19 +1,4 @@
-// ============================================================================
 // DataScreen.jsx — the "Your data" tab.
-//
-// Two views in one screen:
-//
-//   graph → a line of every reading you've saved, plus what it adds up to
-//   add   → the weekly form asking weight, height and age
-//
-// The first reminder of each week opens this straight into the "add" view; the
-// rest of the week the tab opens on the graph.
-//
-// Everything here stays on the phone. The graph is drawn by hand in SVG rather
-// than with a charting library — partly because a library would be far larger
-// than this whole app, and partly because it would be the one piece of code in
-// the project nobody could read.
-// ============================================================================
 
 import { useState, useEffect } from 'react'
 import { todayKey, formatShortDate, formatLongDate } from '../dates'
@@ -26,11 +11,7 @@ import {
 import { loadAccount, saveAccount } from '../accountStorage'
 import './DataScreen.css'
 
-// The two things that can be plotted. Only ONE is ever drawn at a time — a
-// chart with two different scales up the side is genuinely misleading, because
-// the crossing point of the two lines means nothing at all.
-// The three meals, in the order they happen. Used both by the form and by the
-// list of past readings, so the two can never fall out of step.
+// The two things that can be plotted.
 const MEALS = [
   { id: 'breakfast', label: 'Breakfast' },
   { id: 'lunch', label: 'Lunch' },
@@ -42,8 +23,7 @@ const SERIES = [
   { id: 'bmi', label: 'BMI', unit: '' },
 ]
 
-// The drawing area, in SVG units. The picture scales to whatever width the
-// phone has; these numbers only set the SHAPE.
+// The drawing area, in SVG units.
 const W = 320
 const H = 180
 const PAD_LEFT = 34
@@ -51,8 +31,7 @@ const PAD_RIGHT = 12
 const PAD_TOP = 14
 const PAD_BOTTOM = 26
 
-// BMI from one reading: 703 × pounds ÷ inches². Same formula as Your BMI —
-// see BmiScreen.jsx for where the 703 comes from.
+// BMI from one reading: 703 × pounds ÷ inches².
 function bmiOf(entry) {
   const inches = entry.heightFeet * 12 + entry.heightInches
   if (!inches) return null
@@ -60,10 +39,6 @@ function bmiOf(entry) {
 }
 
 // One meal from a reading, as text.
-//
-// Readings saved before meals existed have no "meals" at all, and a reading may
-// have been saved with some meals blank. This answers "" for every one of those
-// cases, so nothing downstream has to keep checking.
 function mealAt(entry, which) {
   return (entry && entry.meals && entry.meals[which]) || ''
 }
@@ -75,24 +50,17 @@ function valuesFor(entries, seriesId) {
   )
 }
 
-// PROPS from App.jsx:
-//   goal        → the chosen goal, so the summary can say whether the change
-//                 is the direction the user actually wanted
-//   openAdd     → true when a notification asked for this week's measurements
-//   onAddOpened → clears that request once it's been acted on
+// PROPS from App.jsx: goal → the chosen goal.
 function DataScreen({ goal, openAdd, onAddOpened }) {
   const [entries, setEntries] = useState(() => loadMeasurements())
   const [seriesId, setSeriesId] = useState('weight')
 
-  // Which point on the graph is selected. A phone has no hover, so tapping a
-  // reading is how you find out what it says — null means none picked.
+  // Which point on the graph is selected.
   const [picked, setPicked] = useState(null)
 
   const [view, setView] = useState(openAdd ? 'add' : 'graph')
 
-  // If a notification arrives while this tab is already open, the component
-  // isn't rebuilt, so the starting value above never runs again. This catches
-  // that case.
+  // If a notification arrives while this tab is already open, the component isn't rebuilt.
   useEffect(() => {
     if (openAdd) {
       setView('add')
@@ -100,7 +68,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
     }
   }, [openAdd, onAddOpened])
 
-  // ---- The weekly form -----------------------------------------------------
+  // ---- The weekly form ----
   if (view === 'add') {
     return (
       <MeasurementForm
@@ -114,7 +82,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
     )
   }
 
-  // ---- Nothing recorded yet ------------------------------------------------
+  // ---- Nothing recorded yet ----
   if (entries.length === 0) {
     return (
       <main className="screen data-screen">
@@ -139,13 +107,11 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
   const series = SERIES.find((item) => item.id === seriesId)
   const values = valuesFor(entries, seriesId)
 
-  // ---- Working out the shape of the line -----------------------------------
+  // ---- Working out the shape of the line ----
   const lowest = Math.min(...values)
   const highest = Math.max(...values)
 
-  // A flat line would divide by zero below, so a single value gets a small
-  // range invented around it. That draws it across the middle of the box,
-  // which is the honest picture of "this hasn't changed".
+  // A flat line would divide by zero below.
   const span = highest - lowest || 2
   const low = highest === lowest ? lowest - 1 : lowest
   const plotW = W - PAD_LEFT - PAD_RIGHT
@@ -159,8 +125,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
   }
 
   function yOf(value) {
-    // SVG counts y DOWNWARDS from the top, so the sum is flipped: the biggest
-    // value has to come out with the smallest y to appear at the top.
+    // SVG counts y DOWNWARDS from the top, so the sum is flipped.
     return PAD_TOP + (1 - (value - low) / span) * plotH
   }
 
@@ -169,17 +134,15 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
     .map((value, index) => `${xOf(index)},${yOf(value)}`)
     .join(' ')
 
-  // ---- What it adds up to --------------------------------------------------
+  // ---- What it adds up to ----
   const first = values[0]
   const last = values[values.length - 1]
   const change = last - first
 
-  // Which way the user WANTED it to go, so "down 4 lb" can be reported as
-  // progress or as drift rather than left for them to work out.
+  // Which way the user WANTED it to go.
   const wanted = goal === 'lose' ? -1 : goal === 'gain' ? 1 : 0
 
-  // A little movement either way is normal — water, food, time of day — so
-  // nothing under half a unit is called a change at all.
+  // A little movement either way is normal — water, food, time of day.
   const flat = Math.abs(change) < 0.5
   const onTrack = wanted === 0 ? flat : Math.sign(change) === wanted
 
@@ -188,9 +151,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
       <h1 className="title data-title">Your data</h1>
       <div className="title-rule" />
 
-      {/* ---- Which measure to plot ----
-          Switching redraws the same shape with a different scale. The two are
-          never drawn together: see the note on SERIES above. */}
+      {/* Which measure to plot Switching redraws the same shape with a different scale. */}
       <div className="series-switch" role="group" aria-label="What to show">
         {SERIES.map((item) => (
           <button
@@ -210,7 +171,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
         ))}
       </div>
 
-      {/* ---- The graph ---- */}
+      {/* The graph. */}
       <div className="chart-card">
         <p className="chart-title">
           {/* One line, so no key is needed — the title says what it is. */}
@@ -220,14 +181,11 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
         <svg
           className="chart"
           viewBox={`0 0 ${W} ${H}`}
-          // The picture is described in words underneath instead, for anyone
-          // using a screen reader. The table below carries the actual numbers.
+          // The picture is described in words underneath instead, for anyone using a screen reader.
           role="img"
           aria-label={`${series.label} over time, ${entries.length} readings from ${formatShortDate(entries[0].date)} to ${formatShortDate(entries[entries.length - 1].date)}`}
         >
-          {/* Grid lines: three, at the bottom, middle and top of the range.
-              Deliberately faint — they are there to be measured against, not
-              looked at. */}
+          {/* Grid lines: three, at the bottom, middle and top of the range. */}
           {[0, 0.5, 1].map((fraction) => {
             const value = low + span * fraction
             const y = yOf(value)
@@ -242,21 +200,17 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
                   className="chart-grid"
                 />
                 <text x={PAD_LEFT - 6} y={y + 3} className="chart-axis-label">
-                  {/* Whole numbers for weight, one decimal for BMI, which
-                      moves in much smaller steps. */}
+                  {/* Whole numbers for weight, one decimal for BMI, which moves in much smaller steps. */}
                   {seriesId === 'bmi' ? value.toFixed(1) : Math.round(value)}
                 </text>
               </g>
             )
           })}
 
-          {/* The line itself. vector-effect keeps it exactly 2px however far
-              the picture is stretched — without it, the stroke would scale with
-              the box and come out fat on a big screen. */}
+          {/* The line itself. vector-effect keeps it exactly 2px however far the picture is stretched. */}
           <polyline points={linePoints} className="chart-line" />
 
-          {/* One dot per reading, each with a much bigger invisible circle
-              behind it so it can actually be hit with a thumb. */}
+          {/* One dot per reading, each with a much bigger invisible circle behind it so it can. */}
           {values.map((value, index) => (
             <g key={entries[index].date}>
               <circle
@@ -275,8 +229,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
             </g>
           ))}
 
-          {/* The dates at either end. Every date would collide once there are
-              more than a handful of readings. */}
+          {/* The dates at either end. */}
           <text x={PAD_LEFT} y={H - 8} className="chart-axis-label chart-start">
             {formatShortDate(entries[0].date)}
           </text>
@@ -289,8 +242,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
           </text>
         </svg>
 
-        {/* What the tapped point says. It sits in a fixed slot so the card
-            doesn't jump taller as you tap around it. */}
+        {/* What the tapped point says. */}
         <p className="chart-readout">
           {picked === null
             ? 'Tap a point to see its reading.'
@@ -302,7 +254,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
         </p>
       </div>
 
-      {/* ---- The summary ---- */}
+      {/* The summary. */}
       <div className="data-summary">
         <p className="data-change">
           {flat
@@ -314,8 +266,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
               } since ${formatShortDate(entries[0].date)}`}
         </p>
 
-        {/* Only said when there's a goal to judge it against. Without one there
-            is no such thing as the right direction. */}
+        {/* Only said when there's a goal to judge it against. */}
         {goal && (
           <p className="data-verdict">
             {onTrack
@@ -325,9 +276,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
         )}
       </div>
 
-      {/* ---- The readings in words ----
-          A graph is a picture, and a picture is no use to someone using a
-          screen reader, or to anyone who wants the actual number. */}
+      {/* The readings in words A graph is a picture. */}
       <details className="data-table">
         <summary className="data-table-summary">
           {`All ${entries.length} readings`}
@@ -344,9 +293,7 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
                 </span>
               </div>
 
-              {/* The meals, only for days that have any. Shown under the
-                  numbers because that is the point of writing them down: seeing
-                  what you ate in a week the weight moved the way you wanted. */}
+              {/* The meals, only for days that have any. */}
               {MEALS.map((meal) =>
                 mealAt(entry, meal.id) ? (
                   <p key={meal.id} className="data-row-meal">
@@ -371,28 +318,15 @@ function DataScreen({ goal, openAdd, onAddOpened }) {
   )
 }
 
-// ============================================================================
-// The measurement form. Kept in this file because it is only ever used here,
-// and splitting it out would mean jumping between two files to follow one
-// screen.
-//
-// It both ADDS and EDITS. Picking a date the app already has a reading for
-// brings that reading back for changing, rather than quietly starting a second
-// one that would overwrite the first.
-// ============================================================================
+// The measurement form.
 function MeasurementForm({ onSave, onCancel }) {
-  // The date being written to. It starts at today and can be changed, which is
-  // what lets someone fix yesterday's entry, or fill in a day they missed.
+  // The date being written to.
   const [dateKey, setDateKey] = useState(() => todayKey())
 
-  // The reading already saved for that date, if there is one. Worked out on
-  // every render because it has to follow the date box as it changes.
+  // The reading already saved for that date, if there is one.
   const existing = measurementFor(dateKey)
 
-  // What to fill the boxes with. In order of preference: the reading for this
-  // date if it exists, then the most recent reading, then the account details.
-  // Most weeks nothing but the weight has changed, so this turns the form into
-  // one number to check rather than six to re-enter.
+  // What to fill the boxes with.
   const startingPoint = existing || latestMeasurement() || loadAccount()
 
   const [weight, setWeight] = useState(() =>
@@ -408,8 +342,7 @@ function MeasurementForm({ onSave, onCancel }) {
     startingPoint ? String(startingPoint.age) : '',
   )
 
-  // What they ate. Free text, and entirely optional — the point is to be able
-  // to look back at a week that went well and see what was different about it.
+  // What they ate.
   const [breakfast, setBreakfast] = useState(() => mealAt(existing, 'breakfast'))
   const [lunch, setLunch] = useState(() => mealAt(existing, 'lunch'))
   const [dinner, setDinner] = useState(() => mealAt(existing, 'dinner'))
@@ -417,14 +350,8 @@ function MeasurementForm({ onSave, onCancel }) {
   const [error, setError] = useState('')
 
   // Changing the date reloads every box from whatever that day holds.
-  //
-  // Without this, picking a different date would leave today's numbers on
-  // screen and save them onto the other day — quietly overwriting a real
-  // reading with one that was never taken.
   function handleDateChange(nextDate) {
-    // A date box can be cleared, and can be typed into a character at a time,
-    // so half-finished values arrive here. Ignoring anything that isn't a full
-    // date leaves the form on the last good one.
+    // A date box can be cleared, and can be typed into a character at a time.
     if (!/^\d{4}-\d{2}-\d{2}$/.test(nextDate)) return
 
     setDateKey(nextDate)
@@ -440,8 +367,7 @@ function MeasurementForm({ onSave, onCancel }) {
       setAge(String(source.age))
     }
 
-    // Meals come only from a reading actually saved on that date. Carrying
-    // yesterday's dinner onto today would be putting words in someone's mouth.
+    // Meals come only from a reading actually saved on that date.
     setBreakfast(mealAt(saved, 'breakfast'))
     setLunch(mealAt(saved, 'lunch'))
     setDinner(mealAt(saved, 'dinner'))
@@ -450,16 +376,13 @@ function MeasurementForm({ onSave, onCancel }) {
   function handleSubmit(event) {
     event.preventDefault()
 
-    // Everything from a form arrives as text, so it has to be converted before
-    // it can be compared or plotted.
+    // Everything from a form arrives as text.
     const weightNumber = Number(weight)
     const feetNumber = Number(heightFeet)
     const inchesNumber = heightInches === '' ? 0 : Number(heightInches)
     const ageNumber = Number(age)
 
-    // The same ranges the registration form uses. Checking again here matters:
-    // a typo of 1600 lb would not just be wrong, it would flatten the whole
-    // graph into a line along the bottom.
+    // The same ranges the registration form uses.
     if (
       !Number.isFinite(weightNumber) ||
       weightNumber < 20 ||
@@ -494,8 +417,7 @@ function MeasurementForm({ onSave, onCancel }) {
       heightFeet: feetNumber,
       heightInches: inchesNumber,
       age: ageNumber,
-      // .trim() drops stray spaces, so a box holding nothing but a space counts
-      // as empty rather than as a meal nobody typed.
+      // .trim() drops stray spaces, so a box holding nothing but a space counts as empty rather.
       meals: {
         breakfast: breakfast.trim(),
         lunch: lunch.trim(),
@@ -503,11 +425,7 @@ function MeasurementForm({ onSave, onCancel }) {
       },
     }
 
-    // The account is updated to match, so Account info and Your BMI show these
-    // figures too rather than whatever was typed at sign-up months ago.
-    //
-    // Only when editing TODAY, though. Correcting a reading from three weeks
-    // ago should fix the graph, not rewrite what you weigh now.
+    // The account is updated to match.
     const account = loadAccount()
     if (account && dateKey === todayKey()) {
       saveAccount({
@@ -529,8 +447,7 @@ function MeasurementForm({ onSave, onCancel }) {
       </h1>
       <div className="title-rule" />
 
-      {/* The day this reading will be filed under. It follows the date box
-          below, so it always names the day being written to. */}
+      {/* The day this reading will be filed under. */}
       <p className="data-date">{formatLongDate(dateKey)}</p>
 
       <p className="data-intro">
@@ -540,8 +457,7 @@ function MeasurementForm({ onSave, onCancel }) {
       </p>
 
       <form className="account-form" onSubmit={handleSubmit}>
-        {/* ---- The date ----
-            First, because it decides what every box below is showing. */}
+        {/* The date First, because it decides what every box below is showing. */}
         <label className="field-label" htmlFor="measure-date">
           Date
         </label>
@@ -550,8 +466,7 @@ function MeasurementForm({ onSave, onCancel }) {
           className="field-input"
           type="date"
           value={dateKey}
-          // No future dates. A reading you haven't taken yet isn't a reading,
-          // and one dated next month would stretch the graph out to meet it.
+          // No future dates.
           max={todayKey()}
           onChange={(event) => handleDateChange(event.target.value)}
         />
@@ -624,9 +539,7 @@ function MeasurementForm({ onSave, onCancel }) {
           onChange={(event) => setAge(event.target.value)}
         />
 
-        {/* ---- What you ate ----
-            Optional on purpose. A form that refused to save until every meal
-            was written out would simply stop being used. */}
+        {/* What you ate Optional on purpose. */}
         <h2 className="meals-heading">What you ate</h2>
         <p className="meals-note">
           Optional. Worth filling in for a week that went well — looking back at

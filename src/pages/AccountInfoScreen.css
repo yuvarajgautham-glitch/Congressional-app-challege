@@ -1,18 +1,10 @@
-/* ============================================================================
-   AccountInfoScreen.css — styling used ONLY by Settings › Account info.
+/* AccountInfoScreen.css — styling used ONLY by Settings › Account info. */
 
-   The two menu rows and the Back button come from App.css (.row-button and
-   friends), shared with the Settings screen. What's left here is the forms and
-   the signed-in details.
-   ============================================================================ */
-
-/* Line content up from the top rather than centering it vertically — forms are
-   tall, and a centered one jumps around as error messages appear. */
+/* Line content up from the top rather than centering it vertically — forms are tall. */
 .account-screen {
   justify-content: flex-start;
 
-  /* Tighter than the 4vh App.css uses. A form has more pieces to stack, so the
-     standard gap would push the buttons off the bottom of a small phone. */
+  /* Tighter than the 4vh App.css uses. */
   gap: 2.5vh;
 }
 
@@ -21,7 +13,7 @@
   font-size: clamp(24px, 7vw, 32px);
 }
 
-/* ---- The forms ----------------------------------------------------------- */
+/* ---- The forms ---- */
 
 .account-form {
   display: flex;
@@ -31,22 +23,17 @@
   text-align: left;
 }
 
-/* .field-label and .field-input themselves live in App.css — the reminder
-   screen uses the same label and box. Everything below is specific to this
-   form: the dropdown, the side-by-side number boxes, and the error message. */
+/* .field-label and .field-input themselves live in App.css. */
 
 /* The Sex dropdown shares .field-input, but a <select> needs two extras. */
 select.field-input {
-  /* Browsers give dropdowns their own look, which ignores most styling.
-     appearance: none strips that back so ours actually applies. */
+  /* Browsers give dropdowns their own look, which ignores most styling. appearance. */
   appearance: none;
 
-  /* Room on the right for the arrow drawn below, so long text can't run
-     underneath it. */
+  /* Room on the right for the arrow drawn below, so long text can't run underneath it. */
   padding-right: 40px;
 
-  /* A small black triangle, drawn with a gradient rather than an image file:
-     two diagonal halves meeting at a point. no-repeat keeps it to one. */
+  /* A small black triangle, drawn with a gradient rather than an image file. */
   background-image:
     linear-gradient(45deg, transparent 50%, #000 50%),
     linear-gradient(135deg, #000 50%, transparent 50%);
@@ -59,7 +46,7 @@ select.field-input {
   background-repeat: no-repeat;
 }
 
-/* ---- Number boxes with a unit underneath -------------------------------- */
+/* ---- Number boxes with a unit underneath ---- */
 
 /* Puts the feet and inches boxes side by side, sharing the width evenly. */
 .field-row {
@@ -87,10 +74,7 @@ select.field-input {
   margin: 8px 0 0;
   padding: 10px 12px;
 
-  /* Near-black rather than red: red on this green is genuinely hard to read,
-     and it fits the app's black-on-green look. The message itself carries the
-     meaning, which is better practice anyway — color alone is no use to
-     someone who can't distinguish it. */
+  /* Near-black rather than red: red on this green is genuinely hard to read. */
   background: #1a1a1a;
   color: #fff;
 
@@ -101,8 +85,7 @@ select.field-input {
   line-height: 1.35;
 }
 
-/* The "demo only" reminder under the registration form uses .form-note, which
-   now lives in App.css — Your BMI needs the same small print. */
+/* The "demo only" reminder under the registration form uses .form-note. */
 
 /* The Create account / Cancel pair at the foot of a form. */
 .form-buttons {
@@ -111,16 +94,13 @@ select.field-input {
   margin-top: 16px;
 }
 
-/* .primary-button and .ghost-button themselves live in App.css — the exercise
-   plan screen needs the same Save button. Only the side-by-side sharing is
-   specific to a form, so only that stayed here: inside this row the two
-   buttons split the width evenly. */
+/* .primary-button and .ghost-button themselves live in App.css. */
 .form-buttons .primary-button,
 .form-buttons .ghost-button {
   flex: 1;
 }
 
-/* ---- Signed-in details --------------------------------------------------- */
+/* ---- Signed-in details ---- */
 
 .account-details,
 .account-empty {
@@ -130,8 +110,7 @@ select.field-input {
   width: 100%;
 }
 
-/* The Name / Email pairs use .detail-list, .detail-term and .detail-value,
-   which now live in App.css — Your BMI shows the same kind of box. */
+/* The Name / Email pairs use .detail-list, .detail-term and .detail-value. */
 
 /* The "Signed in as ..." line on the Account info menu. */
 .account-status {
@@ -142,5 +121,4 @@ select.field-input {
   opacity: 0.8;
 }
 
-/* The reduced-motion rule that switched the press effect off for these buttons
-   moved to App.css along with the buttons themselves. */
+/* The reduced-motion rule that switched the press effect off for these buttons moved. */

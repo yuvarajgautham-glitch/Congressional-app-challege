@@ -1,16 +1,4 @@
-// ============================================================================
 // DayNotesScreen.jsx — Routine › one day.
-//
-// Opens when a date on the calendar is tapped and then opened. It gathers
-// everything written about that single day in one place:
-//
-//   1. whether the day is in the routine, and a way to change that
-//   2. the notes left on individual exercises when the plan was made
-//   3. a free note about the day itself, which can be written here
-//
-// Those first two are written elsewhere in the app and only shown here. The
-// third belongs to this screen, and is the "add more if you want" part.
-// ============================================================================
 
 import { useState } from 'react'
 import { formatLongDate, todayKey } from '../dates'
@@ -19,29 +7,18 @@ import { loadDayNote, saveDayNote } from '../routineStorage'
 import { PLANS } from '../exercisePlans'
 import './DayNotesScreen.css'
 
-// PROPS from RoutineScreen:
-//   dateKey    → which day this is, e.g. "2026-10-15"
-//   isChosen   → whether it's currently part of the routine
-//   onToggle   → adds or removes it from the routine
-//   onBack     → returns to the calendar
+// PROPS from RoutineScreen: dateKey → which day this.
 function DayNotesScreen({ dateKey, isChosen, onToggle, onBack }) {
-  // The free note for this day. Read once when the screen opens.
+  // The free note for this day.
   const [note, setNote] = useState(() => loadDayNote(dateKey))
 
-  // Whether what's typed has been saved. Starts true because nothing has been
-  // changed yet; any edit flips it, so the button can say which state it's in.
+  // Whether what's typed has been saved.
   const [isSaved, setIsSaved] = useState(true)
 
-  // Every exercise note written for this date, under whichever goal was active
-  // at the time. Read fresh rather than kept in state — nothing on this screen
-  // changes them.
+  // Every exercise note written for this date, under whichever goal was active at the time.
   const exerciseNotes = loadNotesForDate(dateKey)
 
-  // Flattened into one list the screen can draw, turning saved ids back into
-  // the exercises they name.
-  //
-  // Object.entries turns { lose: { walk: "..." } } into [["lose", {...}]], so
-  // both the goal and its notes are available at once.
+  // Flattened into one list the screen can draw.
   const written = []
   for (const [goalId, notes] of Object.entries(exerciseNotes)) {
     const plan = PLANS[goalId]
@@ -71,9 +48,7 @@ function DayNotesScreen({ dateKey, isChosen, onToggle, onBack }) {
       <h1 className="title daynotes-title">{formatLongDate(dateKey)}</h1>
       <div className="title-rule" />
 
-      {/* ---- Is this day in the routine? ----
-          Shown first because it's the thing the calendar tap was about, and it
-          can be changed without going back. */}
+      {/* Is this day in the routine? */}
       <div className="daynotes-status">
         <p className="daynotes-status-text">
           {isChosen
@@ -84,8 +59,7 @@ function DayNotesScreen({ dateKey, isChosen, onToggle, onBack }) {
         <button
           type="button"
           className="ghost-button daynotes-toggle"
-          // A day that has already gone can't be planned — the same rule the
-          // calendar squares follow.
+          // A day that has already gone can't be planned — the same rule the calendar squares follow.
           disabled={isPast}
           onClick={onToggle}
         >
@@ -93,9 +67,7 @@ function DayNotesScreen({ dateKey, isChosen, onToggle, onBack }) {
         </button>
       </div>
 
-      {/* ---- What you wrote on the exercises ----
-          Only drawn when there is something. An empty box headed "your notes"
-          would be worse than no box. */}
+      {/* What you wrote on the exercises Only drawn when there is something. */}
       {written.length > 0 && (
         <section className="daynotes-block">
           <h2 className="daynotes-heading">Notes on your exercises</h2>
@@ -116,10 +88,7 @@ function DayNotesScreen({ dateKey, isChosen, onToggle, onBack }) {
         </section>
       )}
 
-      {/* ---- The free note ----
-          The part that can be written here. Deliberately unstructured: the
-          useful thing about a day is rarely one of the fields a form would
-          have thought to ask for. */}
+      {/* The free note The part that can be written here. */}
       <section className="daynotes-block">
         <h2 className="daynotes-heading">
           {written.length > 0 ? 'Note about this day' : 'Your notes'}

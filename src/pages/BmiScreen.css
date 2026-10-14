@@ -1,14 +1,6 @@
-/* ============================================================================
-   BmiScreen.css — styling used ONLY by Settings › Your BMI.
+/* BmiScreen.css — styling used ONLY by Settings › Your BMI. */
 
-   The heading, divider, boxed detail list, small print and Back button all come
-   from App.css. What's left here is the big number and the scale bar, which no
-   other screen has.
-   ============================================================================ */
-
-/* Start at the top and use a smaller gap than the 4vh in App.css — this screen
-   stacks a lot of pieces, and the standard gap would push the last of them off
-   a short phone. */
+/* Start at the top and use a smaller gap than the 4vh in App.css. */
 .bmi-screen {
   justify-content: flex-start;
   gap: 2.5vh;
@@ -19,7 +11,7 @@
   font-size: clamp(24px, 7vw, 32px);
 }
 
-/* ---- The number ---------------------------------------------------------- */
+/* ---- The number ---- */
 
 .bmi-result {
   display: flex;
@@ -29,8 +21,7 @@
   width: 100%;
 }
 
-/* Deliberately the biggest thing on the screen. It's the one fact the user
-   opened this page for, so it shouldn't need looking for. */
+/* Deliberately the biggest thing on the screen. */
 .bmi-number {
   margin: 0;
   font-family: var(--display);
@@ -51,16 +42,14 @@
   color: #000;
 }
 
-/* ---- The scale bar ------------------------------------------------------- */
+/* ---- The scale bar ---- */
 
 .bmi-scale {
   width: 100%;
 }
 
 .bmi-bar {
-  /* position: relative does nothing visible on its own. What it does is make
-     this box the thing the marker below is positioned AGAINST — without it,
-     the marker would measure its "left" from the whole page instead. */
+  /* position: relative does nothing visible on its own. */
   position: relative;
 
   display: flex; /* Lays the four band segments out in a row. */
@@ -69,21 +58,16 @@
   border: 3px solid #000;
   border-radius: 999px; /* Anything huge gives a fully rounded pill shape. */
 
-  /* The segments are square-cornered rectangles, so without this the first and
-     last would poke out past the rounded ends of the bar. */
+  /* The segments are square-cornered rectangles. */
   overflow: hidden;
 }
 
-/* One band's slice of the bar. Its WIDTH is set in the JSX, because it's worked
-   out from the numbers in BANDS — a stylesheet can't do that arithmetic. */
+/* One band's slice of the bar. */
 .bmi-segment {
   height: 100%;
 }
 
-/* The bands are shaded rather than colored red/amber/green on purpose. Traffic
-   lights would read as a verdict on the person, which a rough screening number
-   has no business delivering — and on this green background red is hard to read
-   anyway. Darker simply means "further from the middle of the scale". */
+/* The bands are shaded rather than colored red/amber/green on purpose. */
 .bmi-segment-under {
   background: rgba(0, 0, 0, 0.32);
 }
@@ -100,7 +84,7 @@
   background: rgba(0, 0, 0, 0.52);
 }
 
-/* The pointer showing where this BMI lands. Its "left" is set in the JSX. */
+/* The pointer showing where this BMI lands. */
 .bmi-marker {
   position: absolute;
   top: 0;
@@ -110,9 +94,7 @@
   background: #000;
   border-radius: 4px;
 
-  /* "left" positions the marker's LEFT EDGE at the right percentage, which
-     would leave it sitting slightly past the mark. Sliding it back by half its
-     own width centers it on the spot instead. */
+  /* "left" positions the marker's LEFT EDGE at the right percentage. */
   transform: translateX(-4px);
 }
 
@@ -120,10 +102,7 @@
 .bmi-ticks {
   display: flex;
 
-  /* Pushes the first tick to the left edge, the last to the right, and spreads
-     the rest evenly between. They're rough guides, not exact pointers — lining
-     each one up precisely under its boundary would need the same arithmetic as
-     the segments, for very little gain. */
+  /* Pushes the first tick to the left edge, the last to the right. */
   justify-content: space-between;
 
   margin-top: 6px;
@@ -133,10 +112,9 @@
   opacity: 0.75;
 }
 
-/* ---- The rest ------------------------------------------------------------ */
+/* ---- The rest ---- */
 
-/* The boxed list of height, weight and age. .detail-list in App.css does the
-   look; this only makes it fill the screen's width. */
+/* The boxed list of height, weight and age. .detail-list in App.css does the look. */
 .bmi-inputs {
   width: 100%;
 }

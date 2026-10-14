@@ -1,25 +1,11 @@
-// ============================================================================
 // ResetGoalsScreen.jsx — Settings › Reset goals.
-//
-// A question with two answers. Under each one, in smaller print, is exactly
-// what tapping it does — because "are you sure?" on its own tells the user
-// nothing they didn't already know, and this is the one screen in the app that
-// throws work away.
-//
-// Nothing is cleared until Yes is tapped. Opening this page, reading it and
-// leaving changes nothing at all.
-// ============================================================================
 
 import { useState } from 'react'
 import './ResetGoalsScreen.css'
 
-// PROPS from SettingsScreen:
-//   onReset → clears the progress (App.jsx does the actual work)
-//   onBack  → returns to the Settings list
+// PROPS from SettingsScreen: onReset → clears the progress (App.jsx does the actual work).
 function ResetGoalsScreen({ onReset, onBack }) {
-  // Whether the reset has happened. Once it has, the question is gone and the
-  // screen becomes a confirmation — asking again would invite a second tap on
-  // something that has already done its job.
+  // Whether the reset has happened.
   const [isReset, setIsReset] = useState(false)
 
   function handleYes() {
@@ -27,7 +13,7 @@ function ResetGoalsScreen({ onReset, onBack }) {
     setIsReset(true)
   }
 
-  // ---- After the reset -----------------------------------------------------
+  // ---- After the reset ----
   if (isReset) {
     return (
       <main className="screen reset-screen">
@@ -52,7 +38,7 @@ function ResetGoalsScreen({ onReset, onBack }) {
     )
   }
 
-  // ---- The question --------------------------------------------------------
+  // ---- The question ----
   return (
     <main className="screen reset-screen">
       <h1 className="title reset-title">Reset goals</h1>
@@ -61,9 +47,7 @@ function ResetGoalsScreen({ onReset, onBack }) {
       <p className="reset-question">Reset everything you have done so far?</p>
 
       <div className="reset-choices">
-        {/* Each answer is a button with its consequences written underneath in
-            smaller type. The two are wrapped together so the small print stays
-            visibly attached to the button it describes. */}
+        {/* Each answer is a button with its consequences written underneath in smaller type. */}
         <div className="reset-choice">
           <button type="button" className="primary-button" onClick={handleYes}>
             Yes

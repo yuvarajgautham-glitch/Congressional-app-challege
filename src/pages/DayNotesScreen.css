@@ -1,22 +1,16 @@
-/* ============================================================================
-   DayNotesScreen.css — styling used ONLY by Routine › one day.
-
-   The heading, divider, buttons and Back button come from App.css. What's left
-   is the status line, the list of exercise notes, and the writing box.
-   ============================================================================ */
+/* DayNotesScreen.css — styling used ONLY by Routine › one day. */
 
 .daynotes-screen {
   justify-content: flex-start;
   gap: 2.2vh;
 }
 
-/* The date is the heading, and dates run long — "Thursday, 15 October" needs
-   more room than "Goals" does. */
+/* The date is the heading, and dates run long — "Thursday. */
 .daynotes-title {
   font-size: clamp(20px, 5.8vw, 28px);
 }
 
-/* ---- Is this day in the routine? ---------------------------------------- */
+/* ---- Is this day in the routine? ---- */
 
 .daynotes-status {
   display: flex;
@@ -41,7 +35,7 @@
   font-size: 15px;
 }
 
-/* ---- Blocks -------------------------------------------------------------- */
+/* ---- Blocks ---- */
 
 .daynotes-block {
   width: 100%;
@@ -58,7 +52,7 @@
   line-height: 1.2;
 }
 
-/* ---- Notes written on exercises ----------------------------------------- */
+/* ---- Notes written on exercises ---- */
 
 .daynotes-list {
   /* Strip the bullets and indent — each note is its own boxed card. */
@@ -71,8 +65,7 @@
   gap: 10px;
 }
 
-/* Outlined rather than filled: these are read here, not tapped. The lemon fill
-   everywhere else in this app means "button". */
+/* Outlined rather than filled: these are read here, not tapped. */
 .daynotes-item {
   padding: 13px 14px;
   border: 3px solid #000;
@@ -88,8 +81,7 @@
   line-height: 1.25;
 }
 
-/* What the user actually wrote — the point of the card, so it reads loudest
-   of the three lines despite being the smallest font. */
+/* What the user actually wrote — the point of the card. */
 .daynotes-item-note {
   margin: 5px 0 0;
   font-family: var(--sans);
@@ -101,8 +93,7 @@
   overflow-wrap: anywhere;
 }
 
-/* Which goal it was written under — the quietest line, since it is context
-   rather than content. */
+/* Which goal it was written under — the quietest line. */
 .daynotes-item-goal {
   margin: 7px 0 0;
   font-family: var(--sans);
@@ -121,7 +112,7 @@
   opacity: 0.8;
 }
 
-/* ---- The writing box ----------------------------------------------------- */
+/* ---- The writing box ---- */
 
 .daynotes-label {
   display: block;
@@ -135,8 +126,7 @@
   opacity: 0.75;
 }
 
-/* White, like every other box you type into in this app, so it is obvious it
-   can be typed in — the lemon shapes around it are things you tap. */
+/* White, like every other box you type into in this app, so it is obvious it can be typed. */
 .daynotes-input {
   width: 100%;
   padding: 12px;
@@ -147,8 +137,7 @@
 
   font-family: var(--sans);
 
-  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box
-     with smaller text, which throws the layout off. Never set this lower. */
+  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box with smaller text. */
   font-size: 16px;
   line-height: 1.4;
   color: #000;

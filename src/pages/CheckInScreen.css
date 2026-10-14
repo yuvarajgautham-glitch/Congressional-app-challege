@@ -1,9 +1,4 @@
-/* ============================================================================
-   CheckInScreen.css — styling used ONLY by the check-in the reminder opens.
-
-   The heading, divider and Back button come from App.css. What's left is the
-   streak card, the tick list and the big check mark button.
-   ============================================================================ */
+/* CheckInScreen.css — styling used ONLY by the check-in the reminder opens. */
 
 .checkin-screen {
   justify-content: flex-start;
@@ -14,11 +9,9 @@
   font-size: clamp(24px, 7vw, 32px);
 }
 
-/* ---- The streak ---------------------------------------------------------- */
+/* ---- The streak ---- */
 
-/* The number and its label, boxed so it reads as one thing rather than two
-   stray lines. Deliberately the loudest thing on the page once today is
-   confirmed — it's what the user came back to see. */
+/* The number and its label, boxed so it reads as one thing rather than two stray lines. */
 .streak-card {
   display: flex;
   flex-direction: column;
@@ -63,11 +56,10 @@
   opacity: 0.85;
 }
 
-/* ---- The tick list ------------------------------------------------------- */
+/* ---- The tick list ---- */
 
 .checkin-list {
-  /* Strip the bullets and indent a <ul> comes with, keeping the list structure
-     without the look — each row already has its own tick box. */
+  /* Strip the bullets and indent a <ul> comes with, keeping the list structure without the look. */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -78,8 +70,7 @@
   width: 100%;
 }
 
-/* One row. Shorter than the Goals plan rows: this list is a quick tick-off, so
-   it drops the explanation line and just names the exercise. */
+/* One row. */
 .checkin-item {
   display: flex;
   align-items: center;
@@ -104,13 +95,11 @@
   background: var(--button-on);
   border-width: 5px;
 
-  /* Trim the padding by the 2px the thicker border adds, so a row doesn't jump
-     wider as it's ticked and nudge everything below it. */
+  /* Trim the padding by the 2px the thicker border adds. */
   padding: 10px 12px;
 }
 
-/* The square box. Square is deliberate: rounded controls read as "pick one of
-   these", a square as "tick any of these" — which is what this list is. */
+/* The square box. */
 .checkin-box {
   flex: none; /* Never squashed by a long exercise name. */
 
@@ -138,12 +127,11 @@
   font-size: clamp(14px, 4.2vw, 17px);
   line-height: 1.25;
 
-  /* Without this, a flex child refuses to shrink below its longest word, which
-     on a narrow phone pushes the row off the screen. */
+  /* Without this, a flex child refuses to shrink below its longest word. */
   min-width: 0;
 }
 
-/* ---- The check mark button ---------------------------------------------- */
+/* ---- The check mark button ---- */
 
 .checkin-confirm {
   display: flex;
@@ -162,8 +150,7 @@
   font-size: 15px;
 }
 
-/* The confirm. Bigger than an ordinary button, with the tick set large, because
-   it's the one action the whole page is asking for. */
+/* The confirm. */
 .confirm-button {
   display: flex;
   align-items: center;
@@ -201,8 +188,7 @@
   cursor: not-allowed;
 }
 
-/* The small lines under the button — why it's grayed out, or what confirming
-   does for the streak. */
+/* The small lines under the button — why it's grayed out. */
 .checkin-hint {
   margin: 0;
   text-align: center;
@@ -220,9 +206,7 @@
   }
 }
 
-/* The note the user wrote when planning, shown under the exercise on the
-   check-in. Read-only here — this screen confirms what was done rather than
-   changing the plan. */
+/* The note the user wrote when planning, shown under the exercise on the check-in. */
 .checkin-own-note {
   display: block;
   margin-top: 3px;

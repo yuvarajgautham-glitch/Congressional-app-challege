@@ -1,71 +1,37 @@
-/* ============================================================================
-   index.css — site-wide styling.
+/* index.css — site-wide styling. */
 
-   This file sets up things that apply to the WHOLE app: the colors, the fonts,
-   and the phone-shaped frame everything sits inside. Styling for individual
-   screens lives in App.css and in the pages/ folder.
-
-   Reminder on how CSS works: you write a SELECTOR (which elements to style),
-   then a { } block of property: value; pairs.
-   ============================================================================ */
-
-/* :root means "the whole document". Defining values here makes them available
-   everywhere. Names starting with -- are CSS VARIABLES: set the color once,
-   use it in twenty places, and change all twenty by editing this one line. */
+/* :root means "the whole document". */
 :root {
-  /* THE BACKGROUND. Every page shares one vertical gradient: a deep green at
-     the top easing into a brighter, more yellow green at the bottom. It's set
-     once on the phone frame in this file, so no screen has to draw its own —
-     which is also what keeps the shading continuous as you move between tabs
-     instead of restarting on each page. */
+  /* THE BACKGROUND. */
   --green-top: #05690d;
   --green-bottom: #3fae0e;
 
-  /* 180deg means top to bottom. The two stops are the colors above, so
-     editing those two lines re-themes the whole app. */
+  /* 180deg means top to bottom. */
   --green-gradient: linear-gradient(
     180deg,
     var(--green-top) 0%,
     var(--green-bottom) 100%
   );
 
-  /* A flat green midway between the two, for the few places that can't take a
-     gradient — the list of months a dropdown opens, which the browser draws in
-     its own little window outside the page. */
+  /* A flat green midway between the two, for the few places that can't take a gradient. */
   --green: #228c0e;
 
-  /* THE BUTTONS. Every button in the app is filled with this lemon green — the
-     menu buttons, the list rows, the goal cards, the calendar squares, Back,
-     Save, all of them.
-
-     It's deliberately LIGHTER than the brightest part of the background. With a
-     gradient behind them, a mid-green fill would match the background exactly
-     somewhere down the page and the button would vanish; staying clear of both
-     ends of the gradient means a button looks like a button wherever it sits. */
+  /* THE BUTTONS. */
   --button: #6fcb22;
 
-  /* The fill for a button that's switched ON: the open tab, a chosen goal, a
-     ticked exercise, a picked date.
-
-     Now that every button is lemon, "on" can't be shown by filling it in — so
-     it's a paler, brighter lemon instead, with a thicker black border. Two
-     signals rather than one, which also means the difference doesn't rest on
-     telling two similar greens apart. */
+  /* The fill for a button that's switched ON: the open tab, a chosen goal, a ticked exercise. */
   --button-on: #b8ef60;
 
-  /* Font lists are read left to right: use the first one installed on the
-     visitor's computer. The last name is a safe fallback that always exists. */
+  /* Font lists are read left to right: use the first one installed on the visitor's computer. */
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
 
   /* The chunky slab font used for headings, to match the mock-up. */
   --display: Rockwell, 'Rockwell Extra Bold', 'Roboto Slab', Georgia, serif;
 
-  /* Shorthand for font-size / line-height, then which font family. So: 16px
-     text with lines spaced at 145% of that. Everything inherits this. */
+  /* Shorthand for font-size / line-height, then which font family. */
   font: 16px/145% var(--sans);
 
-  /* Tells the browser this design is light-colored, so it doesn't try to
-     auto-darken form controls for people using dark mode. */
+  /* Tells the browser this design is light-colored. */
   color-scheme: light;
 
   /* Small text-quality tweaks — sharper letters, no fake bold/italic. */
@@ -75,58 +41,44 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* The * selector means EVERY element. border-box makes width include padding
-   and borders, so a 100px-wide box stays 100px once you add a border. Without
-   this, boxes constantly end up wider than you asked for. */
+/* The * selector means EVERY element. border-box makes width include padding and borders. */
 * {
   box-sizing: border-box;
 }
 
 body {
-  /* Browsers add a margin around the page by default. This removes it so the
-     app can reach the very edge of the screen. */
+  /* Browsers add a margin around the page by default. */
   margin: 0;
 
-  /* The dark bars either side of the phone frame on a computer screen. On a
-     real phone the frame fills the width, so this is never visible. */
+  /* The dark bars either side of the phone frame on a computer screen. */
   background: #101210;
 }
 
-/* #root targets the one element with id="root" — the div in index.html that
-   React fills in. This is the PHONE FRAME: the app is built for phone screens,
-   so on a computer it stays a narrow centered column instead of stretching. */
+/* #root targets the one element with id="root" — the div in index.html that React fills in. */
 #root {
   width: 100%;
 
   /* Never wider than 430px — roughly the width of a large phone. */
   max-width: 430px;
 
-  /* 100svh = 100% of the "small viewport height": the visible height of a phone
-     screen WITH its address bar showing. Plain vh gets this wrong on phones and
-     pushes the bottom menu off the screen. */
+  /* 100svh = 100% of the "small viewport height". */
   height: 100svh;
 
-  /* "0 auto" = no space above/below, automatic space left/right. Equal
-     automatic space on both sides is what centers the frame. */
+  /* "0 auto" = no space above/below, automatic space left/right. */
   margin: 0 auto;
 
-  /* FLEXBOX: lay the children out in a row or column, and share out space.
-     column = stack children top to bottom. Used all over this app. */
+  /* FLEXBOX: lay the children out in a row or column. */
   display: flex;
   flex-direction: column;
 
-  /* Anything taller than the frame gets clipped rather than scrolling the whole
-     page — the app should feel fixed in place, like a real phone app. */
+  /* Anything taller than the frame gets clipped rather than scrolling the whole page. */
   overflow: hidden;
 
-  /* The one place the background gradient is drawn. Because #root is the whole
-     phone frame, the shading runs the full height of the screen — behind the
-     current page AND behind the menu bar — exactly as in the reference. */
+  /* The one place the background gradient is drawn. */
   background: var(--green-gradient);
 }
 
-/* Buttons don't inherit the page font automatically — this fixes that so our
-   buttons don't fall back to the browser's default font. */
+/* Buttons don't inherit the page font automatically. */
 button {
   font-family: inherit;
 }

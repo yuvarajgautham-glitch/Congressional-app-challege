@@ -1,17 +1,4 @@
-// ============================================================================
 // CheckInScreen.jsx — the page a reminder notification opens.
-//
-// It asks one thing: which of today's exercises did you actually do? Tick them,
-// then tap the big check mark at the bottom to confirm. Confirming is what
-// counts the day towards the streak.
-//
-// Come back after confirming — by tapping the next notification, say — and the
-// streak is what the page leads with.
-//
-// The ticks are the SAME list the Goals plan screen saves. Ticking here and
-// ticking there are the same act recorded in the same place, so the two can
-// never disagree about what was done today.
-// ============================================================================
 
 import { useState } from 'react'
 import {
@@ -24,24 +11,15 @@ import { currentStreak, isCheckedIn, recordCheckIn } from '../streakStorage'
 import { PLANS } from '../exercisePlans'
 import './CheckInScreen.css'
 
-// PROPS from App.jsx:
-//   goal           → the chosen goal ('lose', 'maintain', 'gain'), or null
-//   scheduledDays  → the workout days picked on the Routine calendar, which is
-//                    what "in a row" is counted against
-//   onClose        → shuts the check-in and returns to whatever tab was open
+// PROPS from App.jsx: goal → the chosen goal ('lose', 'maintain', 'gain').
 function CheckInScreen({ goal, scheduledDays, onClose }) {
-  // Today's date, worked out once and kept. A check-in started just before
-  // midnight still counts for the day it was started.
+  // Today's date, worked out once and kept.
   const [dateKey] = useState(() => todayKey())
 
   // The plan for the chosen goal, or undefined when no goal has been picked.
   const plan = goal ? PLANS[goal] : null
 
-  // Which exercises are ticked. Starts from whatever is already saved for
-  // today, so this page and the Goals plan screen always show the same ticks.
-  //
-  // Ticks for exercises no longer in the plan are dropped, for the same reason
-  // as on the Goals plan screen — see the note there.
+  // Which exercises are ticked.
   const [chosen, setChosen] = useState(() =>
     plan
       ? loadDayPlan(dateKey, goal).filter((id) =>
@@ -51,25 +29,15 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
   )
 
   // The streak as it stands, and whether today has already been confirmed.
-  // Both are kept in state rather than read fresh each time, because tapping
-  // the check mark has to change what's on screen straight away.
-  //
-  // currentStreak, not the raw saved number: if a workout day has been and gone
-  // without being confirmed, the run is already broken and this reports 0. The
-  // saved count wouldn't know that until the next check-in.
   const [streak, setStreak] = useState(() =>
     currentStreak(scheduledDays, dateKey),
   )
   const [isDone, setIsDone] = useState(() => isCheckedIn(dateKey))
 
-  // Whatever the user wrote against each exercise when planning. Read once and
-  // never changed here — this screen is for confirming what was done, not for
-  // rewriting the plan.
+  // Whatever the user wrote against each exercise when planning.
   const ownNotes = goal ? loadDayNotes(dateKey, goal) : {}
 
-  // Ticks one exercise, or clears it. Saved on every tap rather than waiting
-  // for the check mark: the ticks and the confirmation are two different
-  // things, and someone who ticks a few and wanders off should keep them.
+  // Ticks one exercise, or clears it.
   function toggleExercise(id) {
     const next = chosen.includes(id)
       ? chosen.filter((chosenId) => chosenId !== id)
@@ -79,17 +47,16 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
     saveDayPlan(dateKey, goal, next)
   }
 
-  // The check mark. Records the day and moves the streak on.
+  // The check mark.
   function handleConfirm() {
     saveDayPlan(dateKey, goal, chosen)
 
-    // recordCheckIn hands back the new streak, so there's no need to read it
-    // again — and .count because it returns the whole record.
+    // recordCheckIn hands back the new streak, so there's no need to read it again.
     setStreak(recordCheckIn(dateKey, scheduledDays).count)
     setIsDone(true)
   }
 
-  // ---- No goal picked yet --------------------------------------------------
+  // ---- No goal picked yet ----
   // Handled first so everything below can assume there's a plan to show.
   if (!plan) {
     return (
@@ -118,10 +85,7 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
       </h1>
       <div className="title-rule" />
 
-      {/* ---- The streak ----
-          Shown at the top once today is confirmed, because from then on it's
-          the thing the user opened the page to see. Before confirming it sits
-          lower down, out of the way of the question being asked. */}
+      {/* The streak Shown at the top once today is confirmed. */}
       {isDone && (
         <div className="streak-card">
           <p className="streak-count">{streak}</p>
@@ -137,8 +101,7 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
           : 'Tick the exercises you completed today, then confirm at the bottom.'}
       </p>
 
-      {/* The tick list. Same shape as the Goals plan screen — a square box you
-          can tap anywhere along the row. */}
+      {/* The tick list. */}
       <ul className="checkin-list">
         {plan.items.map((item) => {
           const isChecked = chosen.includes(item.id)
@@ -148,8 +111,7 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
               <button
                 type="button"
                 className={`checkin-item${isChecked ? ' is-checked' : ''}`}
-                // role="checkbox" plus aria-checked is what tells a screen
-                // reader this is a tick box rather than an ordinary button.
+                // role="checkbox" plus aria-checked is what tells a screen reader this is a tick box.
                 role="checkbox"
                 aria-checked={isChecked}
                 onClick={() => toggleExercise(item.id)}
@@ -172,9 +134,7 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
         })}
       </ul>
 
-      {/* ---- The check mark ----
-          The big confirm at the foot of the page. It's a check mark rather than
-          a word because that's what it means: "yes, that's what I did". */}
+      {/* The check mark The big confirm at the foot of the page. */}
       <div className="checkin-confirm">
         <p className="checkin-count">
           {`${chosen.length} of ${plan.items.length} done`}
@@ -184,12 +144,10 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
           type="button"
           className="confirm-button"
           onClick={handleConfirm}
-          // Confirming an empty list would count a day on which nothing was
-          // done, which is exactly what a streak shouldn't reward.
+          // Confirming an empty list would count a day on which nothing was done.
           disabled={chosen.length === 0}
         >
-          {/* The tick itself is hidden from screen readers — the label beside
-              it already says what the button does. */}
+          {/* The tick itself is hidden from screen readers. */}
           <span className="confirm-tick" aria-hidden="true">
             &#10003;
           </span>
@@ -202,8 +160,7 @@ function CheckInScreen({ goal, scheduledDays, onClose }) {
           <p className="checkin-hint">Tick at least one to confirm.</p>
         )}
 
-        {/* Before confirming, the streak still gets a quiet mention — it's the
-            reason to tap the button, so hiding it entirely would be odd. */}
+        {/* Before confirming, the streak still gets a quiet mention — it's the reason to tap the button. */}
         {!isDone && streak > 0 && (
           <p className="checkin-hint">
             {`Confirming keeps your streak of ${streak} going.`}

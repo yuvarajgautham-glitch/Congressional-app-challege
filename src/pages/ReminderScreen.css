@@ -1,10 +1,4 @@
-/* ============================================================================
-   ReminderScreen.css — styling used ONLY by Routine › Daily reminder.
-
-   The heading, divider, text box, buttons and small print all come from
-   App.css. What's left here is this screen's own spacing, and making the time
-   box big enough to be the obvious thing on the page.
-   ============================================================================ */
+/* ReminderScreen.css — styling used ONLY by Routine › Daily reminder. */
 
 .reminder-screen {
   justify-content: flex-start;
@@ -29,11 +23,9 @@
   opacity: 0.85;
 }
 
-/* ---- The questions ------------------------------------------------------- */
+/* ---- The questions ---- */
 
-/* The heading above each question — "Repeat these days every week?" and "What
-   time should the app remind you?". Both use this so the two read as a pair of
-   questions rather than as unrelated blocks. */
+/* The heading above each question. */
 .reminder-question {
   margin: 0 0 10px;
   text-align: left;
@@ -48,9 +40,7 @@
   width: 100%;
 }
 
-/* Holds either the two answer buttons, or the answer plus its Undo. Stacked
-   rather than side by side: "Yes, repeat weekly" and "No, just these days" are
-   too long to sit next to each other on a phone without wrapping badly. */
+/* Holds either the two answer buttons, or the answer plus its Undo. */
 .reminder-choices {
   display: flex;
   flex-direction: column;
@@ -68,7 +58,7 @@
   font-weight: 700;
 }
 
-/* ---- The time box -------------------------------------------------------- */
+/* ---- The time box ---- */
 
 .reminder-field {
   display: flex;
@@ -78,9 +68,7 @@
   text-align: left;
 }
 
-/* .field-label in App.css leaves space above itself to separate one field from
-   the next in a long form. This screen has a single field, so that space would
-   just be a gap under the heading. */
+/* .field-label in App.css leaves space above itself to separate one field from the next in. */
 .reminder-label {
   margin-top: 0;
 }
@@ -92,15 +80,12 @@
   font-size: clamp(28px, 9vw, 40px);
   text-align: center;
 
-  /* Browsers give a time box their own inner layout and shading. This strips
-     that back so it matches the app's white boxes with black borders. */
+  /* Browsers give a time box their own inner layout and shading. */
   appearance: none;
   padding: 18px 12px;
 }
 
-/* Safari and Chrome draw the little clock button inside a time box. It doesn't
-   match anything else here, and tapping the box itself already opens the
-   picker, so it's hidden. */
+/* Safari and Chrome draw the little clock button inside a time box. */
 .reminder-input::-webkit-calendar-picker-indicator {
   display: none;
 }
@@ -114,7 +99,7 @@
   opacity: 0.75;
 }
 
-/* ---- Buttons ------------------------------------------------------------- */
+/* ---- Buttons ---- */
 
 .reminder-actions {
   display: flex;

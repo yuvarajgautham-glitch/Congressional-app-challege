@@ -1,21 +1,12 @@
-/* ============================================================================
-   RoutineScreen.css — styling used ONLY by the Routine screen.
+/* RoutineScreen.css — styling used ONLY by the Routine screen. */
 
-   The heading, divider, dropdown box and buttons come from App.css, which every
-   screen shares. What's left is the calendar itself.
-   ============================================================================ */
-
-/* App.css centers a screen's content vertically. The sketch puts the heading at
-   the top with the calendar below, so we line things up from the top instead.
-
-   The gap is tighter than the 4vh in App.css because there's a lot to stack
-   here — date, prompt, dropdown, calendar and Save all have to fit. */
+/* App.css centers a screen's content vertically. */
 .routine-screen {
   justify-content: flex-start;
   gap: 2vh;
 }
 
-/* ---- Today's date and the prompt ---------------------------------------- */
+/* ---- Today's date and the prompt ---- */
 
 /* "Thursday, August 13 · 2:05 PM", straight under the title. */
 .routine-now {
@@ -42,7 +33,7 @@
   opacity: 0.85;
 }
 
-/* ---- The month dropdown -------------------------------------------------- */
+/* ---- The month dropdown ---- */
 
 .month-picker {
   display: flex;
@@ -60,22 +51,12 @@
   font-size: 15px;
 }
 
-/* Shares the box shape with the app's other form fields, via .field-input in
-   App.css. These are the extras a <select> needs — including the color, since
-   this one is meant to sit INTO the green background rather than stand out
-   from it the way a box you type into should. */
+/* Shares the box shape with the app's other form fields, via .field-input in App.css. */
 .month-select {
-  /* Browsers give dropdowns their own look, which ignores most styling.
-     appearance: none strips that back so ours actually applies. */
+  /* Browsers give dropdowns their own look, which ignores most styling. appearance. */
   appearance: none;
 
-  /* Overrides the white from .field-input. See-through rather than a green of
-     its own, so the page's gradient shows through the box and it matches its
-     surroundings exactly — which a fixed green couldn't, since the gradient is
-     a slightly different shade at every height.
-
-     background-color rather than the background shorthand, because the
-     shorthand would also wipe out the arrow drawn further down this rule. */
+  /* Overrides the white from .field-input. */
   background-color: transparent;
 
   padding: 12px 40px 12px 12px; /* Room on the right for the arrow below. */
@@ -83,9 +64,7 @@
   font-family: var(--display);
   font-weight: 800;
 
-  /* A small black triangle, drawn with a gradient rather than an image file:
-     two diagonal halves meeting at a point. Same technique as the Sex dropdown
-     on the account form. */
+  /* A small black triangle, drawn with a gradient rather than an image file. */
   background-image:
     linear-gradient(45deg, transparent 50%, #000 50%),
     linear-gradient(135deg, #000 50%, transparent 50%);
@@ -98,26 +77,14 @@
   background-repeat: no-repeat;
 }
 
-/* The list of months that drops down when the box is tapped.
-
-   Worth knowing: how much of this actually applies is up to the browser. On a
-   computer, Chrome and Firefox honour it and the list comes out green. On an
-   iPhone, Safari opens its own picker wheel drawn by the operating system,
-   which ignores page styling entirely — the list will look like every other
-   iOS picker whatever we put here. There's no way around that from a web page,
-   and it's the reason the box itself is styled too rather than relying on the
-   open list to carry the color.
-
-   This is the one place that uses the flat --green rather than the gradient:
-   the browser draws this list in its own little window outside the page, where
-   a gradient has nothing to line up with. */
+/* The list of months that drops down when the box is tapped. */
 .month-select option {
   background-color: var(--green);
   color: #000;
   font-weight: 700;
 }
 
-/* ---- The calendar -------------------------------------------------------- */
+/* ---- The calendar ---- */
 
 .calendar-block {
   width: 100%;
@@ -133,8 +100,7 @@
   font-size: clamp(17px, 5vw, 21px);
 }
 
-/* The Sun–Sat row. It uses the SAME seven columns as the grid below so each
-   name sits exactly over its column — the two must always match. */
+/* The Sun–Sat row. */
 .weekday-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -152,32 +118,24 @@
   opacity: 0.7;
 }
 
-/* THE CALENDAR GRID.
-
-   CSS GRID is the right tool here: you describe the shape of the grid once, and
-   the squares flow into it by themselves. Seven columns, one per weekday, and
-   the browser works out how many rows a month needs on its own. */
+/* THE CALENDAR GRID. */
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 
-  /* Tighter than a five-column grid could afford — seven squares plus their
-     gaps have to fit across a narrow phone. */
+  /* Tighter than a five-column grid could afford. */
   gap: 4px;
   width: 100%;
 }
 
-/* The empty cells before the 1st. They take up a slot in the grid and draw
-   nothing, which is what shifts the 1st under the right weekday. */
+/* The empty cells before the 1st. */
 .day-blank {
   aspect-ratio: 1 / 1;
 }
 
-/* One day square. These are real <button> elements so they work with a keyboard
-   and with screen readers without any extra effort on our part. */
+/* One day square. */
 .day {
-  /* Makes the height match the width, so each cell is a perfect square however
-     wide the phone is. 1 / 1 means "1 wide for every 1 tall". */
+  /* Makes the height match the width. */
   aspect-ratio: 1 / 1;
 
   /* Center the day number both across and down inside its square. */
@@ -185,8 +143,7 @@
   align-items: center;
   justify-content: center;
 
-  /* Strip the browser's default button look and draw our own lemon box, to
-     match every other button in the app. */
+  /* Strip the browser's default button look and draw our own lemon box. */
   padding: 0;
   background: var(--button);
   border: 2px solid #000;
@@ -195,9 +152,7 @@
   font-family: var(--display);
   font-weight: 800;
 
-  /* clamp(smallest, preferred, largest) — the number scales with the screen
-     width but never gets smaller than 12px or bigger than 16px. Smaller than
-     the old five-column grid, because the squares themselves are smaller. */
+  /* clamp(smallest, preferred, largest). */
   font-size: clamp(12px, 3.4vw, 16px);
 
   line-height: 1;
@@ -211,33 +166,25 @@
   transform: scale(0.94);
 }
 
-/* A day that has already gone. Faded and drawn with a dashed outline: two
-   signals rather than one, so it doesn't rely on noticing a shade of gray.
-   The disabled attribute in the JSX is what actually stops the tap — this only
-   makes that visible. */
+/* A day that has already gone. */
 .day:disabled {
   border-style: dashed;
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-/* Today. An inset ring rather than a thicker border, so it can be combined with
-   is-chosen below without the two fighting over the same border.
-
-   box-shadow with the "inset" keyword draws inside the box; 0 0 0 3px means no
-   offset, no blur, and a solid 3px ring. */
+/* Today. */
 .day.is-today {
   box-shadow: inset 0 0 0 3px #000;
 }
 
-/* A day the user has picked to exercise on. Filling it in makes the shape of
-   the routine obvious at a glance. */
+/* A day the user has picked to exercise on. */
 .day.is-chosen {
   background: var(--button-on);
   border-width: 4px;
 }
 
-/* ---- Save --------------------------------------------------------------- */
+/* ---- Save ---- */
 
 .routine-save {
   display: flex;
@@ -257,18 +204,16 @@
   font-size: 16px;
 }
 
-/* Respect the phone setting some people use to reduce on-screen movement:
-   when it's switched on, drop the press animation. */
+/* Respect the phone setting some people use to reduce on-screen movement. */
 @media (prefers-reduced-motion: reduce) {
   .day:active {
     transform: none;
   }
 }
 
-/* ---- The day you just tapped --------------------------------------------- */
+/* ---- The day you just tapped ---- */
 
-/* Appears below the calendar once a square has been tapped. Outlined rather
-   than filled so it reads as a message with an action, not a second Save. */
+/* Appears below the calendar once a square has been tapped. */
 .picked-day {
   display: flex;
   flex-direction: column;

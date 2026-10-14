@@ -1,16 +1,6 @@
-/* ============================================================================
-   SettingsScreen.css — styling used ONLY by the Settings screen.
+/* SettingsScreen.css — styling used ONLY by the Settings screen. */
 
-   This file is short on purpose. The list rows and the Back button used to live
-   here, but the Account info screen needs exactly the same look, so they moved
-   into App.css where every screen can reach them. They're now called .row-list,
-   .row-button, .row-label, .row-arrow and .back-button.
-
-   The heading and black divider also come from App.css.
-   ============================================================================ */
-
-/* Line the content up from the top, as in the sketch, instead of centering it
-   vertically the way App.css does by default. */
+/* Line the content up from the top, as in the sketch. */
 .settings-screen {
   justify-content: flex-start;
 }

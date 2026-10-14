@@ -1,45 +1,6 @@
-// ============================================================================
 // exercisePlans.js — the exercise recommendations, one list per goal.
-//
-// This is DATA, not visuals, so it lives on its own rather than inside a
-// screen. Two screens need it: the plan you set under Goals, and the check-in
-// that the reminder notification opens. Neither owns it.
-//
-// ---------------------------------------------------------------------------
-// WHERE THESE COME FROM
-//
-// Every item below is drawn from the fitness, weight-loss and diet research
-// gathered for this project. The shape of each list follows the research's main
-// point — that lasting results come from a few repeatable habits covering
-// movement, food and recovery together, rather than from exercise alone:
-//
-//   lose     → a moderate calorie deficit, cardio AND strength (strength is
-//              what protects muscle while fat is lost), fibre and protein for
-//              fullness, and the sleep/hydration that keep hunger in check.
-//   maintain → variety and consistency: cardio, strength, flexibility, and
-//              balanced everyday eating.
-//   gain     → progressive overload on compound lifts, a slight calorie
-//              surplus with enough protein, and real recovery — muscle is
-//              built during rest, not during the lift.
-//
-// Note that no list tells anyone a calorie number. The research is clear that
-// extreme restriction backfires, and this app knows nothing about the person
-// beyond their height and weight, so the items describe habits instead.
-//
-// Any weight written in these lists is in POUNDS, because that's what the
-// account form asks for and what Account info and Your BMI both show. The
-// research quotes both units; the app sticks to one so nobody has to convert.
-// ---------------------------------------------------------------------------
-//
-// PLANS[goal] gives the right list with no "if" anywhere — which is why adding
-// a goal takes one entry here and one line in GoalsScreen.
-//
-// Each entry has:
-//   id    → the short name saved to storage. Never change one of these once
-//           it's in use, or previously saved ticks stop matching. Ids only
-//           have to be unique WITHIN a goal, since plans are saved per goal.
-//   text  → the recommendation itself
-//   note  → the practical detail, and where it's useful, the reason
+// WHERE THESE COME.
+// PLANS[goal] gives the right list with no "if" anywhere.
 export const PLANS = {
   lose: {
     title: 'Lose weight',

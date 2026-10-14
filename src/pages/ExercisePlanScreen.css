@@ -1,13 +1,6 @@
-/* ============================================================================
-   ExercisePlanScreen.css — styling used ONLY by Goals › the exercise plan.
+/* ExercisePlanScreen.css — styling used ONLY by Goals › the exercise plan. */
 
-   The heading, divider, Save button and Back button all come from App.css.
-   What's left here is the tick list.
-   ============================================================================ */
-
-/* Start from the top rather than centering: this is a long list, and a centered
-   one would sit oddly once it fills the screen. The gap is tighter than the 4vh
-   in App.css because there are several blocks to stack. */
+/* Start from the top rather than centering: this is a long list. */
 .plan-screen {
   justify-content: flex-start;
   gap: 2.5vh;
@@ -31,13 +24,10 @@
   opacity: 0.85;
 }
 
-/* ---- The tick list ------------------------------------------------------- */
+/* ---- The tick list ---- */
 
 .plan-list {
-  /* A <ul> comes with bullet points and an indent by default. list-style: none
-     removes the bullets and the zeroed padding removes the indent, leaving the
-     list structure without the look — which is what we want, since each row
-     already has its own tick box. */
+  /* A <ul> comes with bullet points and an indent by default. list-style. */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -52,9 +42,7 @@
 .plan-item {
   display: flex;
 
-  /* Line the box up with the FIRST line of text rather than the middle of the
-     block. On a two-line recommendation, centering would leave the box floating
-     opposite the gap between the lines. */
+  /* Line the box up with the FIRST line of text rather than the middle of the block. */
   align-items: flex-start;
 
   gap: 14px;
@@ -74,21 +62,16 @@
   transform: scale(0.99);
 }
 
-/* A ticked row is filled in and outlined more heavily, the same way a chosen
-   goal card is on the Goals screen — one visual language for "this is on". */
+/* A ticked row is filled in and outlined more heavily. */
 .plan-item.is-checked {
   background: var(--button-on);
   border-width: 5px;
 
-  /* The thicker border would make the row jump 2px wider and taller as it's
-     ticked, nudging everything below it. Trimming the padding by the same 2px
-     keeps the row exactly where it was. */
+  /* The thicker border would make the row jump 2px wider and taller as it's ticked. */
   padding: 12px;
 }
 
-/* The square box itself. Square is deliberate: rounded or circular controls
-   read as "pick one of these", while a square box reads as "tick any of
-   these" — which is exactly what this list is. */
+/* The square box itself. */
 .plan-box {
   /* flex: none stops the box being squashed by a long recommendation. */
   flex: none;
@@ -101,14 +84,12 @@
   align-items: center;
   justify-content: center;
 
-  /* White against the row's lemon makes an empty box clearly empty, rather than
-     looking like a faint outline drawn on the button. */
+  /* White against the row's lemon makes an empty box clearly empty. */
   background: #fff;
   border: 3px solid #000;
   border-radius: 6px; /* Only just rounded — still unmistakably a square. */
 
-  /* Nudges the box down to sit level with the capital letters of the first
-     line of text, which look slightly lower than the line's true top. */
+  /* Nudges the box down to sit level with the capital letters of the first line of text. */
   margin-top: 1px;
 }
 
@@ -126,8 +107,7 @@
   flex-direction: column;
   gap: 3px;
 
-  /* Without this, a flex child refuses to shrink below the width of its longest
-     unbroken word, which on a narrow phone pushes the row off the screen. */
+  /* Without this, a flex child refuses to shrink below the width of its longest unbroken word. */
   min-width: 0;
 }
 
@@ -147,7 +127,7 @@
   opacity: 0.8;
 }
 
-/* ---- Save ---------------------------------------------------------------- */
+/* ---- Save ---- */
 
 .plan-save {
   display: flex;
@@ -167,8 +147,7 @@
   font-size: 16px;
 }
 
-/* The line under the button saying why it can't be used yet. Quieter than the
-   tally above it — it's an explanation, not a heading. */
+/* The line under the button saying why it can't be used yet. */
 .plan-hint {
   margin: 0;
   text-align: center;
@@ -179,10 +158,9 @@
   opacity: 0.8;
 }
 
-/* ---- Your own note on an exercise --------------------------------------- */
+/* ---- Your own note on an exercise ---- */
 
-/* Indented to line up under the words of the row above, not the tick box, so
-   it reads as belonging to that exercise rather than being a new item. */
+/* Indented to line up under the words of the row above, not the tick box. */
 .plan-note-wrap {
   display: flex;
   flex-direction: column;
@@ -199,8 +177,7 @@
   opacity: 0.75;
 }
 
-/* White, like every other box you type into in this app, so it is obvious it
-   can be typed in — the lemon rows around it are things you tap. */
+/* White, like every other box you type into in this app, so it is obvious it can be typed. */
 .plan-note-input {
   width: 100%;
   padding: 10px;
@@ -211,8 +188,7 @@
 
   font-family: var(--sans);
 
-  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box
-     with smaller text, which throws the layout off. Never set this lower. */
+  /* 16px MATTERS on iPhone: Safari zooms the page in when you tap a text box with smaller text. */
   font-size: 16px;
   line-height: 1.35;
   color: #000;
@@ -231,11 +207,9 @@
   color: rgba(0, 0, 0, 0.45);
 }
 
-/* ---- Links to further reading -------------------------------------------- */
+/* ---- Links to further reading ---- */
 
-/* Small print under the goal's opening line. Deliberately quieter than the
-   list below it: these are a door out of the app, not the thing the page is
-   for. */
+/* Small print under the goal's opening line. */
 .plan-links {
   margin: 0;
   width: 100%;
@@ -248,10 +222,7 @@
   opacity: 0.85;
 }
 
-/* The web addresses themselves. Black with an underline rather than the
-   browser's default blue, which would be the only blue in the whole app and
-   would fight with the green. The underline is what still marks them as links
-   once the color is gone — never rely on color alone for that. */
+/* The web addresses themselves. */
 .plan-link {
   color: #000;
   font-weight: 700;
@@ -261,8 +232,7 @@
   overflow-wrap: anywhere;
 }
 
-/* A clear outline when reached by keyboard, so someone tabbing through can see
-   where they are. */
+/* A clear outline when reached by keyboard, so someone tabbing through can see where they are. */
 .plan-link:focus-visible {
   outline: 3px solid #000;
   outline-offset: 2px;

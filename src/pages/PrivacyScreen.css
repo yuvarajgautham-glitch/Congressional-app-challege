@@ -1,9 +1,4 @@
-/* ============================================================================
-   PrivacyScreen.css — styling used ONLY by Settings › Privacy and data.
-
-   The heading, divider and Back button come from App.css. What's left is the
-   list of promises and the limits box under it.
-   ============================================================================ */
+/* PrivacyScreen.css — styling used ONLY by Settings › Privacy and data. */
 
 .privacy-screen {
   justify-content: flex-start;
@@ -26,11 +21,10 @@
   line-height: 1.35;
 }
 
-/* ---- The promises -------------------------------------------------------- */
+/* ---- The promises ---- */
 
 .privacy-list {
-  /* Strip the bullets and indent a <ul> comes with — each item is its own
-     boxed card, which does the separating far better than a dot would. */
+  /* Strip the bullets and indent a <ul> comes with — each item is its own boxed card. */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -41,8 +35,7 @@
   width: 100%;
 }
 
-/* One promise. Outlined rather than filled: these are statements to read, not
-   buttons to tap, and filling them lemon would suggest otherwise. */
+/* One promise. */
 .privacy-item {
   padding: 14px;
   text-align: left;
@@ -75,12 +68,9 @@
   margin-bottom: 0;
 }
 
-/* ---- The limits ---------------------------------------------------------- */
+/* ---- The limits ---- */
 
-/* Set apart from the promises above with a filled panel rather than an
-   outline, so it reads as a different KIND of statement — the caveats, not
-   more reassurance. Dark on light is the same treatment .form-error uses for
-   the other message in this app that must not be skimmed past. */
+/* Set apart from the promises above with a filled panel rather than an outline. */
 .privacy-limits {
   width: 100%;
   padding: 14px;

@@ -1,42 +1,25 @@
-/* ============================================================================
-   App.css — styling SHARED by every screen.
-
-   Two kinds of rule live here:
-     1. the frame that holds a screen plus the menu bar
-     2. pieces reused on more than one page (heading, divider, quote text)
-
-   Anything used by only ONE screen belongs in that screen's own CSS file, next
-   to its component in the pages/ folder.
-
-   A note on names: a selector starting with "." matches a className in the JSX.
-   So .tab-bar here styles <nav className="tab-bar"> in TabBar.jsx.
-   ============================================================================ */
+/* App.css — styling SHARED by every screen. */
 
 /* The column holding everything: the current screen on top, menu underneath. */
 .phone {
-  /* flex: 1 means "grow to fill whatever space is available" — here, the full
-     height of #root, which index.css sized to the phone screen. */
+  /* flex: 1 means "grow to fill whatever space is available" — here, the full height of #root. */
   flex: 1;
 
   display: flex;
   flex-direction: column;
 
-  /* A flexbox quirk worth knowing: without this, a child with a lot of content
-     can refuse to shrink and push the menu bar off the bottom of the screen. */
+  /* A flexbox quirk worth knowing: without. */
   min-height: 0;
 
-  /* No background of its own, on purpose. The gradient is painted once on the
-     phone frame in index.css, and this box sits exactly on top of it — so
-     leaving it see-through lets that one gradient show through every screen. */
+  /* No background of its own, on purpose. */
   background: none;
 
   color: #000; /* #000 is black. Colors can be written as #rrggbb in hex. */
 }
 
-/* ---- Pieces every screen shares ----------------------------------------- */
+/* ---- Pieces every screen shares ---- */
 
-/* Every page component uses className="screen" on its <main> tag, so this rule
-   gives all of them the same basic layout in one place. */
+/* Every page component uses className="screen" on its <main> tag. */
 .screen {
   flex: 1; /* Fill the space above the menu bar. */
 
@@ -44,30 +27,19 @@
   display: flex;
   flex-direction: column;
 
-  /* In a flex COLUMN these two mean:
-       align-items     → left-to-right position (center = middle of the screen)
-       justify-content → top-to-bottom position (center = vertically centered) */
+  /* In a flex COLUMN these two mean. */
   align-items: center;
   justify-content: center;
 
-  /* Space between each child. Much tidier than adding margins to everything.
-     vh = 1% of screen height, so the gap scales with the phone's size. */
+  /* Space between each child. */
   gap: 4vh;
 
-  /* padding = inner space. Three values = top, left-and-right, bottom.
-
-     env(safe-area-inset-top) is the height of the strip the clock and battery
-     sit in — the notch or Dynamic Island area. It only matters once the app is
-     installed to the home screen, where index.html lets the page run behind the
-     status bar so the gradient reaches the very top. Without this the heading
-     would sit underneath the clock. In a normal browser tab, and on anything
-     without a notch, it's simply 0 and nothing changes. */
+  /* padding = inner space. */
   padding: calc(5vh + env(safe-area-inset-top)) 20px 3vh;
 
   min-height: 0;
 
-  /* If one screen's content is too tall, scroll just that screen — the menu bar
-     stays put at the bottom, which is how phone apps behave. */
+  /* If one screen's content is too tall, scroll just that screen. */
   overflow-y: auto;
 }
 
@@ -77,9 +49,7 @@
   font-family: var(--display);
   font-weight: 900; /* 400 is normal, 700 is bold, 900 is the heaviest. */
 
-  /* clamp(smallest, preferred, largest) — a really useful tool. Here the text
-     wants to be 10% of the screen width, but is never smaller than 30px or
-     bigger than 42px. That's how one size fits every phone. */
+  /* clamp(smallest, preferred, largest) — a really useful tool. */
   font-size: clamp(30px, 10vw, 42px);
 
   line-height: 1.1; /* Tighten the space between the two lines of the title. */
@@ -88,23 +58,19 @@
   color: #000;
 }
 
-/* The thick black lens-shaped line under each heading. It's an empty <div> —
-   there is no text inside it. The shape is made entirely of CSS. */
+/* The thick black lens-shaped line under each heading. */
 .title-rule {
-  /* flex: none stops the flexbox from squashing this to nothing when the screen
-     gets crowded. Without it the divider can vanish on short screens. */
+  /* flex: none stops the flexbox from squashing this to nothing when the screen gets crowded. */
   flex: none;
 
   width: 100%;
   height: 12px;
   background: #000;
 
-  /* 50% rounds the corners as much as possible. On a wide, short box that
-     produces the pointed lens shape from the mock-up rather than a circle. */
+  /* 50% rounds the corners as much as possible. */
   border-radius: 50%;
 
-  /* A NEGATIVE margin pulls the element upwards, closing some of the 4vh gap
-     set by .screen so the divider tucks in under the heading. */
+  /* A NEGATIVE margin pulls the element upwards. */
   margin-top: -2vh;
 }
 
@@ -119,33 +85,24 @@
   color: #000;
 }
 
-/* ---- Bottom menu: five equal buttons ------------------------------------ */
+/* ---- Bottom menu: five equal buttons ---- */
 
 .tab-bar {
-  /* CSS GRID lays things out in rows and columns. Flexbox shares out space;
-     grid divides it into fixed slots — better when you want equal sizes. */
+  /* CSS GRID lays things out in rows and columns. */
   display: grid;
 
-  /* repeat(5, 1fr) = five columns, each 1 "fraction" of the space. Because
-     every column asks for the same 1fr, all five buttons come out EXACTLY the
-     same width, on any phone. This is what keeps the menu even.
-
-     Change this number if you add a tab to components/tabs.js — otherwise the
-     new button wraps onto a second row. */
+  /* repeat(5, 1fr) = five columns, each 1 "fraction" of the space. */
   grid-template-columns: repeat(5, 1fr);
 
   gap: 6px; /* Space between the buttons. Tighter now there are five. */
 
-  /* env(safe-area-inset-bottom) is the height of the home-bar strip along the
-     bottom of phones without a home button. Adding it keeps the buttons from
-     sitting underneath it. On other devices it's simply 0. */
+  /* env(safe-area-inset-bottom) is the height of the home-bar strip along the bottom of phones. */
   padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
 
   /* The thick black line above the menu, as drawn in the mock-up. */
   border-top: 10px solid #000;
 
-  /* See-through, like .phone above, so the page gradient carries on down
-     through the menu bar rather than stopping at a flat green strip. */
+  /* See-through, like .phone above. */
   background: none;
 }
 
@@ -157,14 +114,12 @@
   justify-content: center;
   gap: 4px;
 
-  /* Lets a button shrink narrower than its text if space gets tight. Without
-     it, a long word could stretch one button and unbalance the row. */
+  /* Lets a button shrink narrower than its text if space gets tight. */
   min-width: 0;
 
   padding: 10px 4px;
 
-  /* Buttons have their own browser styling, so these lines strip it back:
-     take the page font, black text, and our own lemon fill. */
+  /* Buttons have their own browser styling, so these lines strip it back: take the page font. */
   font: inherit;
   color: #000;
   background: var(--button);
@@ -177,24 +132,18 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* :active styles an element only WHILE it's being pressed. Shrinking it very
-   slightly makes a tap feel like it did something. */
+/* :active styles an element only WHILE it's being pressed. */
 .tab:active {
   transform: scale(0.96);
 }
 
-/* Two class names joined with no space means "has BOTH". So this matches only
-   the button TabBar.jsx gave the extra "is-active" class — the open tab. */
+/* Two class names joined with no space means "has BOTH". */
 .tab.is-active {
   background: var(--button-on);
   border-width: 4px; /* A thicker outline draws the eye to the current tab. */
 }
 
-/* The icons are black drawings on a see-through background, so there is nothing
-   to do here but size them — no color flipping, no blending.
-
-   They used to be white-on-black squares that had to be inverted and blended to
-   hide the square. See the note in components/tabs.js for why that had to go. */
+/* The icons are black drawings on a see-through background. */
 .tab-icon {
   width: 28px;
   height: 28px;
@@ -202,9 +151,7 @@
 }
 
 .tab-label {
-  /* Five buttons leave roughly 70px of usable width each, and "Your data" is
-     the longest label. nowrap keeps it on one line — allowed to wrap, that one
-     button would grow taller and drag the whole menu bar up with it. */
+  /* Five buttons leave roughly 70px of usable width. */
   white-space: nowrap;
 
   font-size: 10px;
@@ -213,10 +160,8 @@
   line-height: 1;
 }
 
-/* ---- Reusable list rows and the Back button ------------------------------ */
-/* Both the Settings list and the Account info menu are "a stack of rows with a
-   > arrow", so these rules live here rather than in either screen's own file.
-   The rule of thumb: the moment a second screen needs a style, move it here. */
+/* ---- Reusable list rows and the Back button ---- */
+/* Both the Settings list and the Account info menu are "a stack of rows with a > arrow". */
 
 /* The stack of rows. */
 .row-list {
@@ -231,8 +176,7 @@
   display: flex;
   align-items: center;
 
-  /* In a flex ROW this pushes the children as far apart as possible, parking
-     the label at the left edge and the arrow at the right. */
+  /* In a flex ROW this pushes the children as far apart as possible. */
   justify-content: space-between;
 
   gap: 12px;
@@ -259,8 +203,7 @@
   font-size: clamp(16px, 4.6vw, 21px);
   line-height: 1.2;
 
-  /* Long labels wrap onto a second line instead of shoving the arrow off the
-     edge of the row. */
+  /* Long labels wrap onto a second line instead of shoving the arrow off the edge of the row. */
   text-align: left;
 }
 
@@ -300,7 +243,7 @@
   line-height: 1;
 }
 
-/* ---- Labeled text boxes ------------------------------------------------- */
+/* ---- Labeled text boxes ---- */
 /* Used by the account forms and by the reminder time, so they live here. */
 
 .field-label {
@@ -308,8 +251,7 @@
   font-weight: 800;
   font-size: 15px;
 
-  /* Space above each label, so the groups separate. Nothing for the first
-     label, since the gap above the form already handles that. */
+  /* Space above each label, so the groups separate. */
   margin-top: 10px;
 }
 
@@ -324,29 +266,21 @@
 
   font-family: var(--sans);
 
-  /* 16px MATTERS on iPhone. Safari zooms the whole page in when you tap a text
-     box with text smaller than 16px, which throws the layout off and is
-     surprisingly hard to undo. Never set this lower. */
+  /* 16px MATTERS on iPhone. */
   font-size: 16px;
 
   color: #000;
 }
 
-/* :focus-visible styles a box while it's selected, but only when the user is
-   navigating by keyboard — so a mouse or thumb tap doesn't leave an outline
-   behind. It's how people tabbing through a form can see where they are. */
+/* :focus-visible styles a box while it's selected. */
 .field-input:focus-visible {
   outline: 3px solid #000;
   outline-offset: 2px;
 }
 
-/* ---- Action buttons ------------------------------------------------------ */
+/* ---- Action buttons ---- */
 
-/* The main action on a screen: Create account, Log in, Log out, Save for today.
-
-   Every button is lemon now, so a fill can't be what marks this one out. The
-   heavier border does that job instead — the same "thicker means more" the open
-   tab and a chosen goal use. */
+/* The main action on a screen: Create account, Log in, Log out, Save for today. */
 .primary-button {
   padding: 14px 16px; /* 2px less all round, to offset the thicker border. */
 
@@ -362,8 +296,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The quieter button beside it — Cancel. Same color and size, thinner border,
-   so the eye lands on the main action first. */
+/* The quieter button beside it — Cancel. */
 .ghost-button {
   padding: 16px 18px;
 
@@ -384,19 +317,15 @@
   transform: scale(0.98);
 }
 
-/* A button that can't be used yet — the Save on the reminder screen before a
-   time is picked. Fading it AND changing the cursor gives two signals rather
-   than relying on color alone, which not everyone can judge. */
+/* A button that can't be used yet — the Save on the reminder screen before a time is picked. */
 .primary-button:disabled,
 .ghost-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* ---- Detail lists and footnotes ----------------------------------------- */
-/* These started life on the Account info screen. Your BMI now shows the same
-   kind of "label above value" box and the same small print, so by the rule of
-   thumb above they moved here. */
+/* ---- Detail lists and footnotes ---- */
+/* These started life on the Account info screen. */
 
 /* A boxed set of label-and-value pairs — a <dl> in the HTML. */
 .detail-list {
@@ -418,16 +347,14 @@
 }
 
 .detail-value {
-  /* A <dd> is indented by default; this removes that and adds our own spacing.
-     The last-child rule below then trims the gap after the final value. */
+  /* A <dd> is indented by default; this removes that and adds our own spacing. */
   margin: 4px 0 16px;
 
   font-family: var(--display);
   font-weight: 800;
   font-size: 19px;
 
-  /* A long email would otherwise stretch the box and scroll the page
-     sideways. This lets it break onto a second line instead. */
+  /* A long email would otherwise stretch the box and scroll the page sideways. */
   overflow-wrap: anywhere;
 }
 
@@ -446,9 +373,7 @@
   opacity: 0.75;
 }
 
-/* A MEDIA QUERY applies its rules only in certain conditions. This one means
-   "if the user has asked their device to reduce motion" — a setting people with
-   motion sensitivity use. We respect it by switching the press effect off. */
+/* A MEDIA QUERY applies its rules only in certain conditions. */
 @media (prefers-reduced-motion: reduce) {
   /* A comma means "and also this selector" — one rule, several targets. */
   .tab:active,

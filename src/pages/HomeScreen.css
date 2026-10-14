@@ -1,37 +1,16 @@
-/* ============================================================================
-   HomeScreen.css — styling used ONLY by the home screen.
+/* HomeScreen.css — styling used ONLY by the home screen. */
 
-   Everything else on this page (the title, the black divider, the quote) is
-   styled in App.css, because the other screens reuse those pieces too.
-   ============================================================================ */
-
-/* THE RUNNER.
-
-   public/runner.png is a black silhouette on a SEE-THROUGH background, cut out
-   of the mock-up JPEG (the runner sat between x 500-4000 and y 2600-6400 in it,
-   on a flat green field, so the green could be turned into transparency).
-
-   It used to be the JPEG itself, zoomed in on the runner, with the leftover
-   green hidden by mix-blend-mode: darken. That worked only while the page
-   behind it was a flat color darker than the JPEG's green — which a gradient
-   running from dark to bright can't be. A picture with real transparency has no
-   such condition: it sits correctly on any background, which is the whole
-   reason for switching. */
+/* THE RUNNER. */
 .runner {
-  /* min(78%, 300px) = whichever is SMALLER. So it's 78% of the screen width on
-     a phone, but stops growing once it reaches 300px on a bigger screen. */
+  /* min(78%, 300px) = whichever is SMALLER. */
   width: min(78%, 300px);
 
-  /* Sets the shape: 3500 wide for every 3800 tall. Because the height is worked
-     out from the width, the runner never looks stretched or squashed. These are
-     the real pixel measurements of the runner in the original picture. */
+  /* Sets the shape: 3500 wide for every 3800 tall. */
   aspect-ratio: 3500 / 3800;
 
   background-image: url('/runner.png');
 
-  /* contain fits the whole picture inside the box without cropping or
-     stretching it. The picture is drawn at 700 x 760, more than twice the size
-     it's shown at, so it stays sharp on a high-resolution phone screen. */
+  /* contain fits the whole picture inside the box without cropping or stretching it. */
   background-size: contain;
 
   /* Don't tile the picture — show it once, centered. */

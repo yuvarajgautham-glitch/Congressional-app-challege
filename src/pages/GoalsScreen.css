@@ -1,20 +1,8 @@
-/* ============================================================================
-   GoalsScreen.css — styling used ONLY by the Goals screen.
+/* GoalsScreen.css — styling used ONLY by the Goals screen. */
 
-   The heading and the black divider are styled in App.css, since the home
-   screen uses those too. What's left is the two goal cards.
-   ============================================================================ */
-
-/* App.css centers each screen's content vertically. The sketch for this page
-   has the heading at the TOP with the cards below it, so we override that one
-   setting here. flex-start means "line up from the start", i.e. the top.
-
-   Because this rule comes from a file loaded after App.css and the element has
-   BOTH classNames ("screen goals-screen"), this value wins. */
+/* App.css centers each screen's content vertically. */
 .goals-screen {
-  /* Tighter than the 4vh in App.css: the page now stacks the chosen goals, a
-     heading, three cards and Clear goal, and the standard gap would push the
-     last of them off a small phone. */
+  /* Tighter than the 4vh in App.css: the page now stacks the chosen goals, a heading. */
   gap: 2.2vh;
   justify-content: flex-start;
 }
@@ -27,19 +15,15 @@
   width: 100%; /* Stretch full width so the cards match the mock-up. */
 }
 
-/* One goal card — "Lose weight" or "Gain weight". These are real <button>
-   elements, which matters: buttons work with the keyboard and with screen
-   readers for free, whereas a clickable <div> does not. */
+/* One goal card — "Lose weight" or "Gain weight". */
 .goal-card {
-  /* The label on the left, the > arrow on the right. space-between is what
-     pushes them to opposite ends of the card. */
+  /* The label on the left, the > arrow on the right. space-between is what pushes them. */
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 
-  /* Two values = top-and-bottom, then left-and-right. The generous 22px top and
-     bottom is what makes these tall, easy targets for a thumb. */
+  /* Two values = top-and-bottom, then left-and-right. */
   padding: 22px 16px;
 
   color: #000;
@@ -53,8 +37,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The card's text. It's a <span> inside the button rather than the button's own
-   text, so the arrow beside it can be sized separately. */
+/* The card's text. */
 .goal-card-label {
   font-family: var(--display);
   font-weight: 800;
@@ -68,33 +51,25 @@
   transform: scale(0.98);
 }
 
-/* The chosen card. GoalsScreen.jsx adds the "is-chosen" class to whichever goal
-   is selected, and this rule switches it to the paler lemon and thickens the
-   border so the choice is obvious at a glance. */
+/* The chosen card. */
 .goal-card.is-chosen {
   background: var(--button-on);
   border-width: 5px;
 
-  /* Trim the padding by the 2px the thicker border adds, so the card doesn't
-     grow and shove the other one down as it's chosen. */
+  /* Trim the padding by the 2px the thicker border adds. */
   padding: 20px 14px;
 }
 
-/* The "Clear goal" button, shown only once a goal is chosen. It uses the shared
-   .ghost-button look from App.css; this only stops it stretching the full width
-   of the screen, since it's a minor action next to the two cards. */
+/* The "Clear goal" button, shown only once a goal is chosen. */
 .goal-clear {
   align-self: center;
   padding-left: 28px;
   padding-right: 28px;
 }
 
-/* ---- Your goals, shown in the open --------------------------------------- */
+/* ---- Your goals, shown in the open ---- */
 
-/* The block at the TOP of the Goals tab listing what the user has already
-   ticked, so the page answers "what am I doing today?" without a tap.
-   Outlined rather than filled: it is something to read, not something to
-   press, and the lemon fill in this app means "button". */
+/* The block at the TOP of the Goals tab listing what the user has already ticked. */
 .current-goals {
   width: 100%;
   padding: 14px;
@@ -144,8 +119,7 @@
   min-width: 0; /* Lets a long name wrap instead of widening the row. */
 }
 
-/* "Change these" — a quieter action than the goal cards below it, since the
-   list above is mostly there to be read. */
+/* "Change these" — a quieter action than the goal cards below. */
 .current-goals-edit {
   width: 100%;
   margin-top: 12px;
@@ -154,8 +128,7 @@
   font-size: 15px;
 }
 
-/* The heading over the three cards. It tells the user what the cards are for
-   now that they are no longer the first thing on the page. */
+/* The heading over the three cards. */
 .goals-choose-title {
   margin: 0;
   width: 100%;
@@ -167,9 +140,7 @@
   line-height: 1.2;
 }
 
-/* The user's own note on a chosen exercise, under the exercise it belongs to.
-   Italic and quieter, so a glance reads the list of exercises first and the
-   specifics second. display:block puts it on its own line inside the text. */
+/* The user's own note on a chosen exercise, under the exercise it belongs to. */
 .current-goal-own-note {
   display: block;
   margin-top: 2px;

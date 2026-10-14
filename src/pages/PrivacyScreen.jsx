@@ -1,24 +1,8 @@
-// ============================================================================
 // PrivacyScreen.jsx — Settings › Privacy and data.
-//
-// Every claim on this page is one the code actually backs up. That matters more
-// than it sounds: a privacy notice that overstates things is worse than none at
-// all, because people make real decisions based on it — like whether to reuse a
-// password here.
-//
-// So the page says what IS protected, and is equally plain about what isn't.
-// If you change how the app stores things, change this page in the same commit.
-// ============================================================================
 
 import './PrivacyScreen.css'
 
 // The promises, as a list so each renders the same way.
-//
-// Every one of these is checkable in the source:
-//   nothing sent   → there is not a single fetch() or network call in src/
-//   no accounts    → nothing is registered anywhere; storage is this phone only
-//   no tracking    → no analytics library, no third-party script at all
-//   password safe  → see passwordSecurity.js
 const PROMISES = [
   {
     id: 'stays',
@@ -52,8 +36,7 @@ const PROMISES = [
   },
 ]
 
-// PROPS from SettingsScreen:
-//   onBack → returns to the Settings list
+// PROPS from SettingsScreen: onBack → returns to the Settings list.
 function PrivacyScreen({ onBack }) {
   return (
     <main className="screen privacy-screen">
@@ -74,10 +57,7 @@ function PrivacyScreen({ onBack }) {
         ))}
       </ul>
 
-      {/* ---- The honest part ----
-          Saying only the reassuring half would be the easy thing to do, and
-          would make everything above less trustworthy rather than more. A
-          reader who spots one overstated claim reasonably doubts the rest. */}
+      {/* The honest part Saying only the reassuring half would be the easy thing to do. */}
       <div className="privacy-limits">
         <h2 className="privacy-item-title">What this does not protect against</h2>
         <p className="privacy-item-body">
